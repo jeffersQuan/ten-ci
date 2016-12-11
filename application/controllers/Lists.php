@@ -35,6 +35,7 @@ class Lists extends CI_Controller {
 
             $this->stock_list_model->update_stock_list($dataArr);
             error_log('init_stock: ' . $stockCode);
+            sleep(1);
         }
 
         $index = 300000;
@@ -47,6 +48,7 @@ class Lists extends CI_Controller {
 
             $this->stock_list_model->update_stock_list($dataArr);
             error_log('init_stock: ' . $stockCode);
+            sleep(1);
         }
 
         $index = 600000;
@@ -59,6 +61,7 @@ class Lists extends CI_Controller {
 
             $this->stock_list_model->update_stock_list($dataArr);
             error_log('init_stock: ' . $stockCode);
+            sleep(1);
         }
 
         $this->stock_list_model->set_gengxinliebiao(0);
