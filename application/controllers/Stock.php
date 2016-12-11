@@ -75,6 +75,7 @@ class Stock extends CI_Controller {
             $this->huan_shou_model->update_data($dataArr);
             $this->cheng_jiao_e_model->update_data($dataArr);
             $this->cheng_jiao_liang_model->update_data($dataArr);
+            error_log('update_data: ' . $stockCode);
         }
         $this->stock_list_model->set_gengxinshuju(0);
     }

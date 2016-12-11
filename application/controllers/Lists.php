@@ -31,10 +31,10 @@ class Lists extends CI_Controller {
 
         for ($index; $index < $max; $index++) {
             $stockCode = $this->getStockCode('sz', $index);
-            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_stock_list($dataArr);
+            error_log('init_stock: ' . $stockCode);
         }
 
         $index = 300000;
@@ -43,10 +43,10 @@ class Lists extends CI_Controller {
 
         for ($index; $index < $max; $index++) {
             $stockCode = $this->getStockCode('sz', $index);
-            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_stock_list($dataArr);
+            error_log('init_stock: ' . $stockCode);
         }
 
         $index = 600000;
@@ -55,10 +55,10 @@ class Lists extends CI_Controller {
 
         for ($index; $index < $max; $index++) {
             $stockCode = $this->getStockCode('sh', $index);
-            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_stock_list($dataArr);
+            error_log('init_stock: ' . $stockCode);
         }
 
         $this->stock_list_model->set_gengxinliebiao(0);
