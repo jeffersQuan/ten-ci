@@ -66,6 +66,7 @@ class Stock extends CI_Controller {
 
         for ($index; $index < $max; $index++) {
             $stockCode = $stocks[$index]['code'];
+            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_data($dataArr);
@@ -106,10 +107,17 @@ class Stock extends CI_Controller {
 
     private function requestStockData($stockCode)
     {
-        $request = new Request('http://qt.gtimg.cn/q=' . $stockCode);
-        $request->setContentType('application/x-javascript; charset=GBK');
-        $request->execute();
-        $response = $request->getResponse();
+        try {
+            $request = new Request('http://qt.gtimg.cn/q=' . $stockCode);
+            $request->setContentType('application/x-javascript; charset=GBK');
+            $request->execute();
+            $response = $request->getResponse();
+        } catch (Error $e) {
+            error_log('Request error!');
+        } catch (Exception $e) {
+            error_log('Request exception!');
+        }
+
         $resArr = explode('~', $response);
 
         if (count($resArr) < 2) {

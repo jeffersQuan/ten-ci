@@ -31,6 +31,7 @@ class Lists extends CI_Controller {
 
         for ($index; $index < $max; $index++) {
             $stockCode = $this->getStockCode('sz', $index);
+            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_stock_list($dataArr);
@@ -44,6 +45,7 @@ class Lists extends CI_Controller {
 
         for ($index; $index < $max; $index++) {
             $stockCode = $this->getStockCode('sz', $index);
+            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_stock_list($dataArr);
@@ -57,6 +59,7 @@ class Lists extends CI_Controller {
 
         for ($index; $index < $max; $index++) {
             $stockCode = $this->getStockCode('sh', $index);
+            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_stock_list($dataArr);
