@@ -29,8 +29,8 @@ class Request {
 
   // Variables used for the request.
   public $userAgent = 'Mozilla/5.0 (compatible; PHP Request library)';
-  public $connectTimeout = 10;
-  public $timeout = 15;
+  public $connectTimeout = 40;
+  public $timeout = 60;
 
   // Variables used for cookie support.
   private $cookiesEnabled = FALSE;
