@@ -11,7 +11,7 @@ class Zhang_fu_model extends CI_Model {
             $code = $arr['code'];
             $zhangfu = $arr['zhangfu'];
             $query = $this->db->query('select * from ten_zhangfu where code = "' . $code . '"');
-            $arr = $query->row_array();
+            $query_result = $query->row_array();
 
             $stock = array(
                 'code' => $code,
@@ -46,10 +46,15 @@ class Zhang_fu_model extends CI_Model {
                 'd28' => 0,
                 'd29' => 0
             );
-            if (count($arr) < 1) {
+
+            if (count($query_result) < 1) {
                 $this->db->insert('ten_zhangfu', $stock);
             } else {
                 $this->db->query('update ten_zhangfu set d0=' . $zhangfu . ' where code="' . $code . '"');
+            }
+
+            if ($this->db->affected_rows() < 1) {
+                $this->update_data($arr);
             }
         }
     }

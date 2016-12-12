@@ -44,6 +44,10 @@ class Stock_list_model extends CI_Model {
                     . ', chengjiaoe=' . $stock['chengjiaoe'] . ', huanshou=' . $stock['huanshou'] . ', shiying=' . $stock['shiying']
                     . ', shijing=' . $stock['shijing'] . ' where code="' . $stock['code'] . '"');
             }
+
+            if ($this->db->affected_rows() < 1) {
+                $this->update_stock_list($arr);
+            }
         }
     }
 
@@ -96,6 +100,10 @@ class Stock_list_model extends CI_Model {
                 . ', zuigao=' . $stock['zuigao'] . ', zuidi=' . $stock['zuidi'] . ', liutong=' . $stock['liutong']
                 . ', chengjiaoe=' . $stock['chengjiaoe'] . ', huanshou=' . $stock['huanshou'] . ', shiying=' . $stock['shiying']
                 . ', shijing=' . $stock['shijing'] . ' where code="' . $stock['code'] . '"');
+        }
+
+        if ($this->db->affected_rows() < 1) {
+            $this->update_data($arr);
         }
     }
 

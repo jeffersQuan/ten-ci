@@ -11,7 +11,7 @@ class Cheng_jiao_e_model extends CI_Model {
             $code = $arr['code'];
             $chengjiaoe = $arr['chengjiaoe'];
             $query = $this->db->query('select * from ten_chengjiaoe where code = "' . $code . '"');
-            $arr = $query->row_array();
+            $query_result = $query->row_array();
 
             $stock = array(
                 'code' => $code,
@@ -46,10 +46,15 @@ class Cheng_jiao_e_model extends CI_Model {
                 'd28' => 0,
                 'd29' => 0
             );
-            if (count($arr) < 1) {
+
+            if (count($query_result) < 1) {
                 $this->db->insert('ten_chengjiaoe', $stock);
             } else {
                 $this->db->query('update ten_chengjiaoe set d0=' . $chengjiaoe . ' where code="' . $code . '"');
+            }
+
+            if ($this->db->affected_rows() < 1) {
+                $this->update_data($arr);
             }
         }
     }

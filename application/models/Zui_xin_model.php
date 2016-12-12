@@ -11,7 +11,7 @@ class Zui_xin_model extends CI_Model {
             $code = $arr['code'];
             $zuixin = $arr['zuixin'];
             $query = $this->db->query('select * from ten_zuixin where code = "' . $code . '"');
-            $arr = $query->row_array();
+            $query_result = $query->row_array();
 
             $stock = array(
                 'code' => $code,
@@ -46,10 +46,15 @@ class Zui_xin_model extends CI_Model {
                 'd28' => 0,
                 'd29' => 0
             );
-            if (count($arr) < 1) {
+
+            if (count($query_result) < 1) {
                 $this->db->insert('ten_zuixin', $stock);
             } else {
                 $this->db->query('update ten_zuixin set d0=' . $zuixin . ' where code="' . $code . '"');
+            }
+
+            if ($this->db->affected_rows() < 1) {
+                $this->update_data($arr);
             }
         }
     }

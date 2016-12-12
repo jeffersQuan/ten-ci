@@ -11,7 +11,7 @@ class Huan_shou_model extends CI_Model {
             $code = $arr['code'];
             $huanshou = $arr['huanshou'];
             $query = $this->db->query('select * from ten_huanshou where code = "' . $code . '"');
-            $arr = $query->row_array();
+            $query_result = $query->row_array();
 
             $stock = array(
                 'code' => $code,
@@ -46,10 +46,15 @@ class Huan_shou_model extends CI_Model {
                 'd28' => 0,
                 'd29' => 0
             );
-            if (count($arr) < 1) {
+
+            if (count($query_result) < 1) {
                 $this->db->insert('ten_huanshou', $stock);
             } else {
                 $this->db->query('update ten_huanshou set d0=' . $huanshou . ' where code="' . $code . '"');
+            }
+
+            if ($this->db->affected_rows() < 1) {
+                $this->update_data($arr);
             }
         }
     }
