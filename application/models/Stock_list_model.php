@@ -66,6 +66,11 @@ class Stock_list_model extends CI_Model {
         $this->db->query('update ten_status set beifen="' . $status . '"');
     }
 
+    public function set_update_progress($progress=0)
+    {
+        $this->db->query('update ten_status set update_progress="' . $progress . '"');
+    }
+
     public function get_status()
     {
         $query = $this->db->query('select * from ten_status limit 1');

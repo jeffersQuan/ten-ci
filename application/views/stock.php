@@ -39,6 +39,7 @@
     $.ajax({
         url: '/stock/check_server_status',
         cache: false,
+        async: false,
         timeout: 60 * 1000,
         success: function (data) {
             $('#server_status').html('与服务器通信正常！');
@@ -51,6 +52,7 @@
     $.ajax({
         url: '/stock/check_update_stock_status',
         cache: false,
+        async: false,
         timeout: 60 * 1000,
         success: function (data) {
             if (data == 'ok') {
@@ -67,12 +69,13 @@
     $.ajax({
         url: '/stock/check_update_data_status',
         cache: false,
+        async: false,
         timeout: 60 * 1000,
         success: function (data) {
             if (data == 'ok') {
                 $('#update_data_status').html('已完成！');
             } else {
-                $('#update_data_status').html('正在执行中！');
+                $('#update_data_status').html(Number(data).toFixed(4) * 100 + '%');
             }
         },
         error: function () {
@@ -83,6 +86,7 @@
     $.ajax({
         url: '/stock/check_backup_status',
         cache: false,
+        async: false,
         timeout: 60 * 1000,
         success: function (data) {
             if (data == 'ok') {

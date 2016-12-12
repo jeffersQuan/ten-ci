@@ -32,7 +32,7 @@ class Stock extends CI_Controller {
         if ($result->gengxinshuju == 0) {
             echo 'ok';
         } else {
-            echo 'processing';
+            echo $result->update_progress;
         }
     }
 
@@ -49,38 +49,46 @@ class Stock extends CI_Controller {
 
     public function update_stock_data ()
     {
-        $this->load->model('cheng_jiao_e_model');
-        $this->load->model('cheng_jiao_liang_model');
-        $this->load->model('huan_shou_model');
-        $this->load->model('liu_tong_model');
-        $this->load->model('stock_list_model');
-        $this->load->model('zhang_fu_model');
-        $this->load->model('zui_xin_model');
+        try {
+            $this->load->model('cheng_jiao_e_model');
+            $this->load->model('cheng_jiao_liang_model');
+            $this->load->model('huan_shou_model');
+            $this->load->model('liu_tong_model');
+            $this->load->model('stock_list_model');
+            $this->load->model('zhang_fu_model');
+            $this->load->model('zui_xin_model');
 
-        $this->stock_list_model->set_gengxinshuju(1);
-        $stocks = $this->stock_list_model->get_stock_list_all();
-        $index = 0;
-        $max = count($stocks);
+            $this->stock_list_model->set_gengxinshuju(1);
+            $this->set_update_progress(0);
+            error_log('start update data!');
+            $stocks = $this->stock_list_model->get_stock_list_all();
+            $max = count($stocks);
 
-        include 'JJG/Request.php';
+            include 'JJG/Request.php';
 
-        for ($index; $index < $max; $index++) {
-            $stockCode = $stocks[$index]['code'];
-            $this->requestStockData($stockCode);
-            $dataArr = $this->requestStockData($stockCode);
+            for ($index=0; $index < $max; $index++) {
+                $stockCode = $stocks[$index]['code'];
+                $this->requestStockData($stockCode);
+                $dataArr = $this->requestStockData($stockCode);
 
-            $this->stock_list_model->update_data($dataArr);
-            $this->zui_xin_model->update_data($dataArr);
-            $this->zhang_fu_model->update_data($dataArr);
-            $this->liu_tong_model->update_data($dataArr);
-            $this->huan_shou_model->update_data($dataArr);
-            $this->cheng_jiao_e_model->update_data($dataArr);
-            $this->cheng_jiao_liang_model->update_data($dataArr);
-            error_log('update_data: ' . $stockCode);
-            sleep(0.1);
+                $this->stock_list_model->update_data($dataArr);
+                $this->zui_xin_model->update_data($dataArr);
+                $this->zhang_fu_model->update_data($dataArr);
+                $this->liu_tong_model->update_data($dataArr);
+                $this->huan_shou_model->update_data($dataArr);
+                $this->cheng_jiao_e_model->update_data($dataArr);
+                $this->cheng_jiao_liang_model->update_data($dataArr);
+                error_log('update_data: ' . $stockCode);
+                $this->set_update_progress($index / $max);
+                sleep(0.1);
+            }
+            $this->stock_list_model->set_gengxinshuju(0);
+            error_log('update_data success!');
+        } catch (Error $e) {
+            error_log('update_data error!' . var_export($e, true));
+        } catch (Exception $e) {
+            error_log('update_data exception!' . var_export($e, true));
         }
-        $this->stock_list_model->set_gengxinshuju(0);
-        error_log('update_data success!');
     }
 
     public function back_up ()
@@ -183,5 +191,11 @@ class Stock extends CI_Controller {
         }
 
         return $dataArr;
+    }
+
+    private function set_update_progress ($progress) {
+        $this->load->model('stock_list_model');
+
+        $this->stock_list_model->set_update_progress($progress);
     }
 }
