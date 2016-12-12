@@ -52,10 +52,6 @@ class Zhang_fu_model extends CI_Model {
             } else {
                 $this->db->query('update ten_zhangfu set d0=' . $zhangfu . ' where code="' . $code . '"');
             }
-
-            if ($this->db->affected_rows() < 1) {
-                $this->update_data($arr);
-            }
         }
     }
 

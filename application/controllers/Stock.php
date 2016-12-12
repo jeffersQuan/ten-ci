@@ -67,6 +67,7 @@ class Stock extends CI_Controller {
             include 'JJG/Request.php';
 
             for ($index=0; $index < $max; $index++) {
+                error_log('-------');
                 $stockCode = $stocks[$index]['code'];
                 $this->requestStockData($stockCode);
                 $dataArr = $this->requestStockData($stockCode);

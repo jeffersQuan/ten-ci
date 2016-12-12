@@ -57,10 +57,6 @@ class Cheng_jiao_liang_model extends CI_Model
             } else {
                 $this->db->query('update ten_chengjiaoliang set d0=' . $chengjiaoliang . ' where code="' . $code . '"');
             }
-
-            if ($this->db->affected_rows() < 1) {
-                $this->update_data($arr);
-            }
         }
     }
 

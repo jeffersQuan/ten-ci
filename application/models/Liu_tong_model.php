@@ -52,10 +52,6 @@ class Liu_tong_model extends CI_Model {
             } else {
                 $this->db->query('update ten_liutong set d0=' . $liutong . ' where code="' . $code . '"');
             }
-
-            if ($this->db->affected_rows() < 1) {
-                $this->update_data($arr);
-            }
         }
     }
 

@@ -52,10 +52,6 @@ class Zui_xin_model extends CI_Model {
             } else {
                 $this->db->query('update ten_zuixin set d0=' . $zuixin . ' where code="' . $code . '"');
             }
-
-            if ($this->db->affected_rows() < 1) {
-                $this->update_data($arr);
-            }
         }
     }
 

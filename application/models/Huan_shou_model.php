@@ -52,10 +52,6 @@ class Huan_shou_model extends CI_Model {
             } else {
                 $this->db->query('update ten_huanshou set d0=' . $huanshou . ' where code="' . $code . '"');
             }
-
-            if ($this->db->affected_rows() < 1) {
-                $this->update_data($arr);
-            }
         }
     }
 

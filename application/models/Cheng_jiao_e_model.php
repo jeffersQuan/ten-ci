@@ -52,10 +52,6 @@ class Cheng_jiao_e_model extends CI_Model {
             } else {
                 $this->db->query('update ten_chengjiaoe set d0=' . $chengjiaoe . ' where code="' . $code . '"');
             }
-
-            if ($this->db->affected_rows() < 1) {
-                $this->update_data($arr);
-            }
         }
     }
 
