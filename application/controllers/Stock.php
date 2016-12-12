@@ -59,18 +59,30 @@ class Stock extends CI_Controller {
             $this->load->model('zui_xin_model');
 
             $this->stock_list_model->set_gengxinshuju(1);
-            $this->set_update_progress(0);
             error_log('start update data!');
             $stocks = $this->stock_list_model->get_stock_list_all();
             $max = count($stocks);
+            $index=0;
+            $result = $this->stock_list_model->get_status();
+            $progress = $result->update_progress;
+
+            if ($progress > 0) {
+                $index = $progress * $max - 3;
+
+                if ($index < 0) {
+                    $index = 0;
+                }
+            }
+
 
             include 'JJG/Request.php';
 
-            for ($index=0; $index < $max; $index++) {
+            for ($index; $index < $max; $index++) {
                 error_log('-------');
                 $stockCode = $stocks[$index]['code'];
                 $this->requestStockData($stockCode);
                 $dataArr = $this->requestStockData($stockCode);
+                error_log('stock_data: ' . var_export($dataArr, true));
 
                 $this->stock_list_model->update_data($dataArr);
                 $this->zui_xin_model->update_data($dataArr);
@@ -80,7 +92,7 @@ class Stock extends CI_Controller {
                 $this->cheng_jiao_e_model->update_data($dataArr);
                 $this->cheng_jiao_liang_model->update_data($dataArr);
                 error_log('update_data: ' . $stockCode);
-                $this->set_update_progress($index / $max);
+                $this->set_update_progress(($index + 1) / $max);
                 sleep(0.1);
             }
             $this->stock_list_model->set_gengxinshuju(0);

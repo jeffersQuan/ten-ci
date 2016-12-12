@@ -75,7 +75,7 @@
             if (data == 'ok') {
                 $('#update_data_status').html('已完成！');
             } else {
-                $('#update_data_status').html(Number(data).toFixed(4) * 100 + '%');
+                $('#update_data_status').html(Number(data * 100).toFixed(4) + '%');
             }
         },
         error: function () {
