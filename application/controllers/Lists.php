@@ -21,7 +21,6 @@ class Lists extends CI_Controller {
     {
         $index = 1;
         $max = 3000;
-//        $max = 2;
 
         include 'JJG/Request.php';
 
@@ -31,7 +30,6 @@ class Lists extends CI_Controller {
 
         for ($index; $index < $max; $index++) {
             $stockCode = $this->getStockCode('sz', $index);
-            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_stock_list($dataArr);
@@ -41,11 +39,9 @@ class Lists extends CI_Controller {
 
         $index = 300000;
         $max = 301000;
-//        $max = 300001;
 
         for ($index; $index < $max; $index++) {
             $stockCode = $this->getStockCode('sz', $index);
-            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_stock_list($dataArr);
@@ -55,11 +51,9 @@ class Lists extends CI_Controller {
 
         $index = 600000;
         $max = 605000;
-//        $max = 600002;
 
         for ($index; $index < $max; $index++) {
             $stockCode = $this->getStockCode('sh', $index);
-            $this->requestStockData($stockCode);
             $dataArr = $this->requestStockData($stockCode);
 
             $this->stock_list_model->update_stock_list($dataArr);
