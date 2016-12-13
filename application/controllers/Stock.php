@@ -80,7 +80,6 @@ class Stock extends CI_Controller {
             for ($index; $index < $max; $index++) {
                 error_log('-------');
                 $stockCode = $stocks[$index]['code'];
-                $this->requestStockData($stockCode);
                 $dataArr = $this->requestStockData($stockCode);
                 error_log('stock_data: ' . var_export($dataArr, true));
 
