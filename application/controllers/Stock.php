@@ -96,6 +96,7 @@ class Stock extends CI_Controller {
                 sleep(0.1);
             }
             $this->stock_list_model->set_gengxinshuju(0);
+	    $this->set_update_progress(0);
             error_log('update_data success!');
         } catch (Error $e) {
             error_log('update_data error!' . var_export($e, true));
