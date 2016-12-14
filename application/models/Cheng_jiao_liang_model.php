@@ -8,6 +8,9 @@ class Cheng_jiao_liang_model extends CI_Model
         $this->liutong_max = 90;
         $this->zuixin_min = 8;
         $this->zuixin_max = 30;
+        $this->zhangfu_min = -0.005;
+        $this->zhangfu_max = 0.05;
+        $this->shijing_max = 5;
     }
 
     public function update_data($arr)
@@ -112,10 +115,11 @@ class Cheng_jiao_liang_model extends CI_Model
         $liutong_max = $this->liutong_max;
         $zuixin_min = $this->zuixin_min;
         $zuixin_max = $this->zuixin_max;
+        $shijing_max = $this->shijing_max;
         $query = $this->db->query("SELECT s.name, s.code, s.zuixin, s.chengjiaoliang, s.liutong
             FROM ten_stock AS s LEFT JOIN ten_chengjiaoliang AS c ON s.code = c.code
             WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
-            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max
+            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max AND s.shijing <= $shijing_max 
             AND s.chengjiaoliang =
             least(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6, c.d7, c.d8, c.d9, c.d10, c.d11, c.d12, c.d13, c.d14, c.d15,
                 c.d16, c.d17, c.d18, c.d19, c.d20, c.d21, c.d22, c.d23, c.d24, c.d25, c.d26, c.d27, c.d28, c.d29) ORDER BY s.liutong");
@@ -128,10 +132,14 @@ class Cheng_jiao_liang_model extends CI_Model
         $liutong_max = $this->liutong_max;
         $zuixin_min = $this->zuixin_min;
         $zuixin_max = $this->zuixin_max;
+        $zhangfu_min = $this->zhangfu_min;
+        $zhangfu_max = $this->zhangfu_max;
+        $shijing_max = $this->shijing_max;
         $query = $this->db->query("SELECT s.name, s.code, s.zuixin, s.chengjiaoliang, s.liutong
             FROM ten_stock AS s LEFT JOIN ten_chengjiaoliang AS c ON s.code = c.code
             WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
-            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max AND s.zhangfu > -0.005 AND s.zhangfu < 0.035
+            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max AND s.shijing <= $shijing_max 
+            AND s.zhangfu > $zhangfu_min AND s.zhangfu <= $zhangfu_max
             AND greatest(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6) / least(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6) >= 4 ORDER BY s.liutong");
 
         return $query->result_array();
@@ -142,10 +150,14 @@ class Cheng_jiao_liang_model extends CI_Model
         $liutong_max = $this->liutong_max;
         $zuixin_min = $this->zuixin_min;
         $zuixin_max = $this->zuixin_max;
+        $zhangfu_min = $this->zhangfu_min;
+        $zhangfu_max = $this->zhangfu_max;
+        $shijing_max = $this->shijing_max;
         $query = $this->db->query("SELECT s.name, s.code, s.zuixin, s.chengjiaoliang, s.liutong
             FROM ten_stock AS s LEFT JOIN ten_chengjiaoliang AS c ON s.code = c.code
             WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
-            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max AND s.zhangfu > -0.005 AND s.zhangfu < 0.035
+            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max AND s.shijing <= $shijing_max 
+            AND s.zhangfu > $zhangfu_min AND s.zhangfu <= $zhangfu_max
             AND greatest(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6, c.d7, c.d8, c.d9, c.d10, c.d11, c.d12, c.d13, c.d14) / least(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6, c.d7, c.d8, c.d9, c.d10, c.d11, c.d12, c.d13, c.d14) >= 5 ORDER BY s.liutong");
 
         return $query->result_array();
@@ -156,10 +168,14 @@ class Cheng_jiao_liang_model extends CI_Model
         $liutong_max = $this->liutong_max;
         $zuixin_min = $this->zuixin_min;
         $zuixin_max = $this->zuixin_max;
+        $zhangfu_min = $this->zhangfu_min;
+        $zhangfu_max = $this->zhangfu_max;
+        $shijing_max = $this->shijing_max;
         $query = $this->db->query("SELECT s.name, s.code, s.zuixin, s.chengjiaoliang, s.liutong
             FROM ten_stock AS s LEFT JOIN ten_chengjiaoliang AS c ON s.code = c.code
             WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
-            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max AND s.zhangfu > -0.005 AND s.zhangfu < 0.035
+            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max AND s.shijing <= $shijing_max 
+            AND s.zhangfu > $zhangfu_min AND s.zhangfu <= $zhangfu_max
             AND greatest(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6, c.d7, c.d8, c.d9, c.d10, c.d11, c.d12, c.d13, c.d14, c.d15,
                 c.d16, c.d17, c.d18, c.d19, c.d20, c.d21, c.d22, c.d23, c.d24, c.d25, c.d26, c.d27, c.d28, c.d29) / least(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6, c.d7, c.d8, c.d9, c.d10, c.d11, c.d12, c.d13, c.d14, c.d15,
                 c.d16, c.d17, c.d18, c.d19, c.d20, c.d21, c.d22, c.d23, c.d24, c.d25, c.d26, c.d27, c.d28, c.d29) >= 6 ORDER BY s.liutong");
