@@ -28,7 +28,7 @@ class Huan_shou_model extends CI_Model {
             WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
             AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
             AND s.shijing <= $shijing_max AND s.huanshou >= $huanshou_min AND s.huanshou <= $huanshou_max
-            AND s.zhangfu < $zhangfu_max_0 
+            AND s.zhangfu < $zhangfu_max_0 AND (z.d0-z.d20) / z.d20 < 10
             AND (z.d0 - least(z.d0, z.d1, z.d2, z.d3, z.d4)) / least(z.d0, z.d1, z.d2, z.d3, z.d4) < $zhangfu_max_5 
             ORDER BY s.liutong");
 
