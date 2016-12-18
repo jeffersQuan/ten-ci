@@ -3,6 +3,13 @@ class Zhang_fu_model extends CI_Model {
     public function __construct()
     {
         $this->load->database();
+        $this->liutong_max = 90;
+        $this->zuixin_min = 8;
+        $this->zuixin_max = 30;
+        $this->shijing_max = 5;
+        $this->zhangfu_min = -0.005;
+        $this->zhangfu_max = 0.025;
+        $this->zhangfu_min_4 = -0.075;
     }
 
     public function update_data($arr)
@@ -103,6 +110,25 @@ class Zhang_fu_model extends CI_Model {
         }
     }
 
+    public function diefu ()
+    {
+        $liutong_max = $this->liutong_max;
+        $zuixin_min = $this->zuixin_min;
+        $zuixin_max = $this->zuixin_max;
+        $zhangfu_min = $this->zhangfu_min;
+        $zhangfu_max = $this->zhangfu_max;
+        $shijing_max = $this->shijing_max;
+        $zhangfu_min_4 = $this->zhangfu_min_4;
+        $query = $this->db->query("SELECT s.name, s.code, s.zuixin
+            FROM ten_stock AS s LEFT JOIN ten_zuixin AS z ON s.code = z.code
+            WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
+            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
+            AND s.shijing <= $shijing_max AND s.zhangfu > $zhangfu_min
+            AND s.zhangfu < $zhangfu_max 
+            AND (greatest(z.d0, z.d1, z.d2, z.d3) - least(z.d0, z.d1, z.d2, z.d3)) / least(z.d0, z.d1, z.d2, z.d3) < $zhangfu_min_4
+            ORDER BY s.liutong");
 
+        return $query->result_array();
+    }
 }
 ?>
