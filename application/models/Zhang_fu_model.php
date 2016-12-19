@@ -125,7 +125,7 @@ class Zhang_fu_model extends CI_Model {
             AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
             AND s.shijing <= $shijing_max AND s.zhangfu > $zhangfu_min
             AND s.zhangfu < $zhangfu_max 
-            AND (greatest(z.d0, z.d1, z.d2, z.d3) - least(z.d0, z.d1, z.d2, z.d3)) / least(z.d0, z.d1, z.d2, z.d3) < $zhangfu_min_4
+            AND (least(z.d0, z.d1, z.d2, z.d3) - greatest(z.d0, z.d1, z.d2, z.d3)) / greatest(z.d0, z.d1, z.d2, z.d3) < $zhangfu_min_4
             ORDER BY s.liutong");
 
         return $query->result_array();
