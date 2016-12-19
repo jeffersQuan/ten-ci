@@ -121,10 +121,11 @@ class Zhang_fu_model extends CI_Model {
         $zhangfu_min_4 = $this->zhangfu_min_4;
         $query = $this->db->query("SELECT s.name, s.code, s.zuixin
             FROM ten_stock AS s LEFT JOIN ten_zuixin AS z ON s.code = z.code
+            LEFT JOIN ten_zhangfu AS zf ON s.code = zf.code
             WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
             AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
             AND s.shijing <= $shijing_max AND s.zhangfu > $zhangfu_min
-            AND s.zhangfu < $zhangfu_max 
+            AND s.zhangfu < $zhangfu_max AND least(zf.d0, zf.d1, zf.d2, zf.d3) < $zhangfu_min_4
             AND (least(z.d0, z.d1, z.d2, z.d3) - greatest(z.d0, z.d1, z.d2, z.d3)) / greatest(z.d0, z.d1, z.d2, z.d3) < $zhangfu_min_4
             ORDER BY s.liutong");
 
