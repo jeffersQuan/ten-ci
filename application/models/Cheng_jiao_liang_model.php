@@ -7,10 +7,10 @@ class Cheng_jiao_liang_model extends CI_Model
         $this->load->database();
         $this->liutong_max = 90;
         $this->zuixin_min = 8;
-        $this->zuixin_max = 30;
+        $this->zuixin_max = 60;
         $this->zhangfu_min = -0.005;
         $this->zhangfu_max = 0.05;
-        $this->shijing_max = 5;
+        $this->shijing_max = 15;
         $this->huanshou_min = 1;
     }
 
