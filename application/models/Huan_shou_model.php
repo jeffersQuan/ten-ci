@@ -25,11 +25,12 @@ class Huan_shou_model extends CI_Model {
         $zhangfu_max_0 = $this->zhangfu_max_0;
         $query = $this->db->query("SELECT s.name, s.code, s.zuixin
             FROM ten_stock AS s LEFT JOIN ten_zuixin AS z ON s.code = z.code
+            LEFT JOIN ten_zhangfu_leiji AS zl ON s.code = zl.code
             WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
             AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
             AND s.shijing <= $shijing_max AND s.huanshou >= $huanshou_min AND s.huanshou <= $huanshou_max
-            AND s.zhangfu < $zhangfu_max_0 AND (z.d0-z.d20) / z.d20 < 10
-            AND (z.d0 - least(z.d0, z.d1, z.d2, z.d3, z.d4)) / least(z.d0, z.d1, z.d2, z.d3, z.d4) < $zhangfu_max_5 
+            AND s.zhangfu < $zhangfu_max_0 AND greatest(zl.d0, zl.d1, zl.d2, zl.d3, zl.d4, zl.d5, zl.d6, zl.d7, zl.d8, zl.d9, zl.d10, zl.d11, zl.d12, zl.d13, zl.d14) < 10
+            AND greatest(zl.d0, zl.d1, zl.d2, zl.d3, zl.d4, zl.d5) < $zhangfu_max_5 
             ORDER BY s.liutong");
 
         return $query->result_array();
