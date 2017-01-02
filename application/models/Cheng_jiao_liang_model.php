@@ -124,7 +124,7 @@ class Cheng_jiao_liang_model extends CI_Model
             AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
             AND s.shijing <= $shijing_max 
             AND s.chengjiaoliang > 0 
-            AND ((zl.d2 < 1 AND zl.d2 > -1) OR (zl.d3 < 1 AND zl.d3 > -1) OR (zl.d4 < 1 AND zl.d4 > -1))
+            AND ((zl.d1 < 2 AND zl.d1 > -2) OR (zl.d2 < 2 AND zl.d2 > -2) OR (zl.d3 < 2 AND zl.d3 > -2) OR (zl.d4 < 2 AND zl.d4 > -2) OR least(zl.d0, zl.d1, zl.d2, zl.d3, zl.d4, zl.d5, zl.d6, zl.d7, zl.d8, zl.d9, zl.d10, zl.d11, zl.d12, zl.d13, zl.d14, zl.d15, zl.d16, zl.d17, zl.d18, zl.d19, zl.d20, zl.d21, zl.d22, zl.d23, zl.d24, zl.d25, zl.d26, zl.d27, zl.d28) < -20)
             AND least(zl.d0, zl.d1, zl.d2, zl.d3, zl.d4, zl.d5, zl.d6, zl.d7, zl.d8, zl.d9, zl.d10, zl.d11, zl.d12, zl.d13, zl.d14) < -10
             AND s.chengjiaoliang < 
             1.1 * least(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6, c.d7, c.d8, c.d9, c.d10, c.d11, c.d12, c.d13, c.d14, c.d15,
