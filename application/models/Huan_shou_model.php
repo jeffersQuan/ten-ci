@@ -8,7 +8,7 @@ class Huan_shou_model extends CI_Model {
         $this->zuixin_max = 60;
         $this->zhangfu_max_5 = 0.08;
         $this->zhangfu_max_0 = 0.05;
-        $this->shijing_max = 10;
+        $this->shijing_max = 8;
         $this->huanshou_min = 5;
         $this->huanshou_max = 16;
     }
