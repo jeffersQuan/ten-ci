@@ -70,7 +70,7 @@
             if (data == 'ok') {
                 $('#update_stock_status').html('已完成！');
             } else {
-                $('#update_stock_status').html('正在执行中！');
+                $('#update_stock_status').html(Number(data * 100).toFixed(4) + '%');
             }
         },
         error: function () {

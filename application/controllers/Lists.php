@@ -20,45 +20,54 @@ class Lists extends CI_Controller {
     public function init_stock()
     {
         $index = 1;
-        $max = 3000;
+        $max = 605000;
+
+        $this->load->model('stock_list_model');
+        $result = $this->stock_list_model->get_status();
+        $progress = $result->init_progress;
+        if ($progress > 0) {
+            $index = $progress * $max - 3;
+            if ($index < 0) {
+                $index = 0;
+            }
+        }
 
         include 'JJG/Request.php';
 
         $this->load->model('stock_list_model');
 
         $this->stock_list_model->set_gengxinliebiao(1);
+        error_log('start init data!');
 
         for ($index; $index < $max; $index++) {
-            $stockCode = $this->getStockCode('sz', $index);
-            $dataArr = $this->requestStockData($stockCode);
+            if ($index < 3000) {
+                $stockCode = $this->getStockCode('sz', $index);
+                $dataArr = $this->requestStockData($stockCode);
+                error_log('init: ' . var_export($dataArr, true));
 
-            $this->stock_list_model->update_stock_list($dataArr);
-            error_log('init_stock: ' . $stockCode);
-            sleep(0.1);
-        }
+                $this->stock_list_model->update_stock_list($dataArr);
+                error_log('init_stock: ' . $stockCode);
+                sleep(0.1);
+            } else if ($index >= 300000 && $index <= 301000) {
+                $stockCode = $this->getStockCode('sz', $index);
+                $dataArr = $this->requestStockData($stockCode);
+                error_log('init: ' . var_export($dataArr, true));
 
-        $index = 300000;
-        $max = 301000;
+                $this->stock_list_model->update_stock_list($dataArr);
+                error_log('init_stock: ' . $stockCode);
+                sleep(0.1);
+            } else if ($index >= 600000) {
+                $stockCode = $this->getStockCode('sh', $index);
+                $dataArr = $this->requestStockData($stockCode);
+                error_log('init: ' . var_export($dataArr, true));
 
-        for ($index; $index < $max; $index++) {
-            $stockCode = $this->getStockCode('sz', $index);
-            $dataArr = $this->requestStockData($stockCode);
-
-            $this->stock_list_model->update_stock_list($dataArr);
-            error_log('init_stock: ' . $stockCode);
-            sleep(0.1);
-        }
-
-        $index = 600000;
-        $max = 605000;
-
-        for ($index; $index < $max; $index++) {
-            $stockCode = $this->getStockCode('sh', $index);
-            $dataArr = $this->requestStockData($stockCode);
-
-            $this->stock_list_model->update_stock_list($dataArr);
-            error_log('init_stock: ' . $stockCode);
-            sleep(0.1);
+                $this->stock_list_model->update_stock_list($dataArr);
+                error_log('init_stock: ' . $stockCode);
+                sleep(0.1);
+            } else {
+                //没有对应的代码
+            }
+            $this->set_init_progress(($index + 1) / $max);
         }
 
         $this->stock_list_model->set_gengxinliebiao(0);
@@ -155,5 +164,10 @@ class Lists extends CI_Controller {
         }
 
         return $dataArr;
+    }
+
+    private function set_init_progress ($progress) {
+        $this->load->model('stock_list_model');
+        $this->stock_list_model->set_init_progress($progress);
     }
 }

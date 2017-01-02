@@ -21,7 +21,7 @@ class Stock extends CI_Controller {
         if ($result->gengxinliebiao == 0) {
             echo 'ok';
         } else {
-            echo 'processing';
+            echo $result->init_progress;
         }
     }
 
