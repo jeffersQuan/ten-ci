@@ -5,12 +5,12 @@ class Cheng_jiao_liang_model extends CI_Model
     public function __construct()
     {
         $this->load->database();
-        $this->liutong_max = 90;
+        $this->liutong_max = 70;
         $this->zuixin_min = 8;
         $this->zuixin_max = 60;
         $this->zhangfu_min = -0.005;
         $this->zhangfu_max = 0.05;
-        $this->shijing_max = 5;
+        $this->shijing_max = 10;
         $this->huanshou_min = 1;
     }
 
