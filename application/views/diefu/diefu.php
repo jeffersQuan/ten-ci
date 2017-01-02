@@ -10,6 +10,9 @@
         <th class="text-center">
             名称
         </th>
+        <th class="text-center">
+            跌幅
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -20,6 +23,9 @@
             </td>
             <td>
                 <?php echo $stock['name']; ?>
+            </td>
+            <td>
+                <?php echo $stock['d14']; ?>
             </td>
         </tr>
     <?php endforeach; ?>
