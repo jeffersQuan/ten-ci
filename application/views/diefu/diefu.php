@@ -25,7 +25,7 @@
                 <?php echo $stock['name']; ?>
             </td>
             <td>
-                <?php echo $stock['d14']; ?>
+                <?php echo $stock['d_min']; ?>
             </td>
         </tr>
     <?php endforeach; ?>
