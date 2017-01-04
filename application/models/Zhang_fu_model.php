@@ -164,7 +164,7 @@ class Zhang_fu_model extends CI_Model {
             FROM ten_stock AS s LEFT JOIN ten_zhangfu_leiji AS zl ON s.code = zl.code
             WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
             AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
-            AND s.shijing <= $shijing_max AND s.zhangfu > $zhangfu_min
+            AND s.shijing <= $shijing_max
             ORDER BY d_min limit 50");
 
         return $query->result_array();
