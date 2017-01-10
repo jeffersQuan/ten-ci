@@ -123,7 +123,7 @@ class Cheng_jiao_liang_model extends CI_Model
             WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
             AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
             AND s.shijing <= $shijing_max 
-            AND s.chengjiaoliang > 0 
+            AND s.chengjiaoliang > 0 AND s.huanshou < 2 
             AND least(zl.d0, zl.d1, zl.d2, zl.d3, zl.d4, zl.d5, zl.d6, zl.d7, zl.d8, zl.d9, zl.d10, zl.d11, zl.d12, zl.d13, zl.d14) < -10
             AND s.chengjiaoliang = least(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6, c.d7, c.d8, c.d9, c.d10, c.d11, c.d12, c.d13, c.d14, c.d15,
                 c.d16, c.d17, c.d18, c.d19, c.d20, c.d21, c.d22, c.d23, c.d24, c.d25, c.d26, c.d27, c.d28, c.d29) ORDER BY s.liutong");
