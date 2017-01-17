@@ -6,7 +6,7 @@ class Zhang_fu_model extends CI_Model {
         $this->liutong_max = 70;
         $this->zuixin_min = 3;
         $this->zuixin_max = 40;
-        $this->shijing_max = 5;
+        $this->shijing_max = 6;
         $this->zhangfu_min = -0.005;
         $this->zhangfu_max = 0.025;
         $this->zhangfu_min_4 = -0.075;
