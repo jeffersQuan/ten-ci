@@ -19,7 +19,7 @@ class Stock_list_model extends CI_Model {
 
     public function get_stock_selected()
     {
-        $query = $this->db->query('select tss.code, ts.name from ten_stock_selected as tss left join ten_stock as ts');
+        $query = $this->db->query('select tss.code, ts.name from ten_stock_selected as tss left join ten_stock as ts on tss.code=ts.code');
         return $query->result_array();
     }
 
