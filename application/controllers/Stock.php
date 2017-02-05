@@ -126,14 +126,14 @@ class Stock extends CI_Controller {
         echo 0;
     }
 
-    public function selected ()
+    public function get_stock_selected ()
     {
         $this->load->model('stock_list_model');
         $data['stock_list'] = $this->stock_list_model->get_stock_selected();
         $this->load->view('lists', $data);
     }
 
-    public function add_selected ($code)
+    public function add_stock_selected ($code)
     {
         if (!$code) {
             return;
@@ -143,7 +143,7 @@ class Stock extends CI_Controller {
         echo 'success';
     }
 
-    public function remove_selected ($code)
+    public function remove_stock_selected ($code)
     {
         if (!$code) {
             return;
