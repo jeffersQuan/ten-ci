@@ -11,11 +11,11 @@ class Chengjiaoliang extends CI_Controller {
 
         for ($index = 0, $max = count($stock_list); $index < $max; $index++) {
             $stock = $stock_list[$index];
-            $stock_list[$index]['selected'] = 0;
+            $stock_list[$index]['selected'] = false;
 
             for ($index1 = 0, $max1 = count($stock_selected); $index1 < $max1; $index1++) {
                 if ($stock_selected[$index1]['code'] == $stock['code']) {
-                    $stock_list[$index]['selected'] = 1;
+                    $stock_list[$index]['selected'] = true;
                     break;
                 }
             }
