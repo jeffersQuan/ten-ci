@@ -26,7 +26,7 @@ class Stock_list_model extends CI_Model {
     public function add_stock_selected($code)
     {
         $stock['code'] = $code;
-        $stock['add_time'] = now();
+//        $stock['add_time'] = time();
         return $this->db->insert('ten_stock_selected', $stock);
     }
 

@@ -36,13 +36,10 @@
         var code = $(this).parents('tr').find('.code').text().trim();
 
         $.ajax({
-            url: '/stock/add_stock_selected',
+            url: '/stock/add_stock_selected/' + code,
             cache: false,
             async: false,
             timeout: 60 * 1000,
-            data: {
-                code: code
-            },
             success: function (data) {
                 window.location.reload();
             },
@@ -56,13 +53,10 @@
         var code = $(this).parents('tr').find('.code').text().trim();
 
         $.ajax({
-            url: '/stock/remove_stock_selected',
+            url: '/stock/remove_stock_selected/' + code,
             cache: false,
             async: false,
             timeout: 60 * 1000,
-            data: {
-                code: code
-            },
             success: function (data) {
                 window.location.reload();
             },
