@@ -126,6 +126,33 @@ class Stock extends CI_Controller {
         echo 0;
     }
 
+    public function selected ()
+    {
+        $this->load->model('stock_list_model');
+        $data['stock_list'] = $this->stock_list_model->get_stock_selected();
+        $this->load->view('lists', $data);
+    }
+
+    public function add_selected ($code)
+    {
+        if (!$code) {
+            return;
+        }
+        $this->load->model('stock_list_model');
+        $data['stock_list'] = $this->stock_list_model->add_stock_selected();
+        echo 'success';
+    }
+
+    public function remove_selected ($code)
+    {
+        if (!$code) {
+            return;
+        }
+        $this->load->model('stock_list_model');
+        $data['stock_list'] = $this->stock_list_model->remove_stock_selected();
+        echo 'success';
+    }
+
     private function requestStockData($stockCode)
     {
         try {

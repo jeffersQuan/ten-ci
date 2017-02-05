@@ -5,7 +5,24 @@ class Chengjiaoliang extends CI_Controller {
 	public function lowest_30()
 	{
 		$this->load->model('cheng_jiao_liang_model');
-        $data['stock_list'] = $this->cheng_jiao_liang_model->get_lowest_30();
+        $this->load->model('stock_list_model');
+        $stock_list = $this->cheng_jiao_liang_model->get_lowest_30();
+        $stock_selected = $this->stock_list_model->get_stock_selected();
+
+        for ($index = 0, $max = count($stock_list); $index < $max; $index++) {
+            $stock = $stock_list[$index];
+
+            for ($index1 = 0, $max1 = count($stock_selected); $index1 < $max1; $index1++) {
+                if ($stock_selected[$index1]['code'] == $stock['code']) {
+                    $stock_list[$index]['selected'] = 1;
+                    break;
+                } else {
+                    $stock_list[$index]['selected'] = 0;
+                }
+            }
+        }
+
+        $data['stock_list'] = $stock_list;
         $this->load->view('chengjiaoliang/chengjiaoliang', $data);
 	}
 

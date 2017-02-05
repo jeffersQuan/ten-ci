@@ -17,6 +17,24 @@ class Stock_list_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function get_stock_selected()
+    {
+        $query = $this->db->query('select tss.code, ts.name from ten_stock_selected as tss left join ten_stock as ts');
+        return $query->result_array();
+    }
+
+    public function add_stock_selected($code)
+    {
+        $stock['code'] = $code;
+        return $this->db->insert('ten_stock', $stock);
+    }
+
+    public function remove_stock_selected($code)
+    {
+        $query = $this->db->query("delete from ten_stock_selected where code='$code'");
+        return $query->result_array();
+    }
+
     public function update_stock_list ($arr) {
         if (count($arr) > 0) {
             $query = $this->db->query('select * from ten_stock where code = "' . $arr['code'] . '"');
