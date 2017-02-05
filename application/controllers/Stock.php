@@ -139,7 +139,7 @@ class Stock extends CI_Controller {
             return;
         }
         $this->load->model('stock_list_model');
-        $data['stock_list'] = $this->stock_list_model->add_stock_selected();
+        $data['stock_list'] = $this->stock_list_model->add_stock_selected($code);
         echo 'success';
     }
 
@@ -149,7 +149,7 @@ class Stock extends CI_Controller {
             return;
         }
         $this->load->model('stock_list_model');
-        $data['stock_list'] = $this->stock_list_model->remove_stock_selected();
+        $data['stock_list'] = $this->stock_list_model->remove_stock_selected($code);
         echo 'success';
     }
 
