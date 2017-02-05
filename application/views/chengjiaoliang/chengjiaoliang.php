@@ -25,7 +25,7 @@
                 <?php echo $stock['name']; ?>
             </td>
             <td>
-                <?php if($stock['selected']){echo "<button class='add'>添加自选</button>";}else{echo "<button class='remove'>删除自选</button>";} ?>
+                <?php if($stock['selected']){echo "<button class='remove'>删除自选</button>";}else{echo "<button class='add'>添加自选</button>";} ?>
             </td>
         </tr>
     <?php endforeach; ?>
