@@ -20,7 +20,10 @@ class Chengjiaoliang extends CI_Controller {
                     break;
                 }
             }
-            array_push($list, $stock_list[$index]);
+
+            if (!$stock_list[$index]['selected']) {
+                array_push($list, $stock_list[$index]);
+            }
         }
 
         $data['stock_list'] = $list;
