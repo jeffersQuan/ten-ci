@@ -10,7 +10,7 @@ class Cheng_jiao_liang_model extends CI_Model
         $this->zuixin_max = 40;
         $this->zhangfu_min = -0.005;
         $this->zhangfu_max = 0.05;
-        $this->shijing_max = 10;
+        $this->shijing_max = 100;
         $this->huanshou_min = 1;
     }
 
