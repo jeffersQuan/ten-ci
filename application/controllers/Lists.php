@@ -25,7 +25,10 @@ class Lists extends CI_Controller {
         $this->load->model('stock_list_model');
         $result = $this->stock_list_model->get_status();
         $progress = $result->init_progress;
-        if ($progress > 0) {
+        if ($progress == 1) {
+            $progress = 0;
+            $index = 0;
+        } else if ($progress > 0) {
             $index = $progress * $max - 3;
             if ($index < 0) {
                 $index = 0;
