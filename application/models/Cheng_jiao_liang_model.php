@@ -5,10 +5,10 @@ class Cheng_jiao_liang_model extends CI_Model
     public function __construct()
     {
         $this->load->database();
-        $this->liutong_max = 70;
+        $this->liutong_max = 120;
         $this->zuixin_min = 3;
-        $this->zuixin_max = 60;
-        $this->zhangfu_min = -0.005;
+        $this->zuixin_max = 80;
+        $this->zhangfu_min = -0.05;
         $this->zhangfu_max = 0.05;
         $this->shijing_max = 100;
         $this->huanshou_min = 1;
@@ -120,7 +120,7 @@ class Cheng_jiao_liang_model extends CI_Model
         $query = $this->db->query("SELECT s.name, s.code, s.zuixin, s.chengjiaoliang, s.liutong
             FROM ten_stock AS s LEFT JOIN ten_chengjiaoliang AS c ON s.code = c.code
             LEFT JOIN ten_zhangfu_leiji AS zl ON s.code = zl.code
-            WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%' AND s.name NOT LIKE '%银行%'
+            WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%'
             AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
             AND s.shijing <= $shijing_max 
             AND s.zhangfu <= 5 
