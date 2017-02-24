@@ -33,7 +33,6 @@ class Stock_list_model extends CI_Model {
     public function remove_stock_selected($code)
     {
         $query = $this->db->query("delete from ten_stock_selected where code='$code'");
-        return $query->result_array();
     }
 
     public function update_stock_list ($arr) {
