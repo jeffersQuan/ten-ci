@@ -20,6 +20,9 @@
     <a href='./lists'>股票列表</a>
 </div>
 <div class="form-group">
+    <a href='./selected'>自选列表</a>
+</div>
+<div class="form-group">
     <a href='./chengjiaoliang/lowest_30'>30日成交新低</a>
 </div>
 <div class="form-group">
