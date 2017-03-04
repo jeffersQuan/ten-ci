@@ -5,6 +5,9 @@
     <thead>
     <tr>
         <th class="text-center">
+
+        </th>
+        <th class="text-center">
             代码
         </th>
         <th class="text-center">
@@ -13,8 +16,11 @@
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($stock_list as $stock): ?>
+    <?php foreach ($stock_list as $key => $stock): ?>
         <tr>
+            <td>
+                <?php echo $key; ?>
+            </td>
             <td>
                 <?php echo substr($stock['code'], 2); ?>
             </td>
