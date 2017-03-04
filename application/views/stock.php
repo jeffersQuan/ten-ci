@@ -26,13 +26,7 @@
     <a href='./chengjiaoliang/lowest_30'>30日成交新低</a>
 </div>
 <div class="form-group">
-    <a href='./chengjiaoliang/pulse_7'>7日成交量变</a>
-</div>
-<div class="form-group">
-    <a href='./chengjiaoliang/pulse_15'>15日成交量变</a>
-</div>
-<div class="form-group">
-    <a href='./chengjiaoliang/pulse_30'>30日成交量变</a>
+    <a href='./stock/tui_jian'>明日推荐</a>
 </div>
 <div class="form-group">
     <a href='./huanshou'>换手榜</a>

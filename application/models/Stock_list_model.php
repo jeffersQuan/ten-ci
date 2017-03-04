@@ -17,6 +17,13 @@ class Stock_list_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function tui_jian ()
+    {
+        $query = $this->db->query('select tss.code, ts.name from ten_stock_small as tss left join ten_stock as ts on tss.code=ts.code '
+        . 'left join ten_zhangfu_leiji as tzl on tzl.code=tss.code where (tzl.d2<1.2 AND tzl.d2>-0.5) and ts.zhangfu>=0');
+        return $query->result_array();
+    }
+
     public function get_stock_selected()
     {
         $query = $this->db->query('select tss.code, ts.name from ten_stock_selected as tss left join ten_stock as ts on tss.code=ts.code');

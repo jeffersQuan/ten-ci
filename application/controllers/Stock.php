@@ -47,6 +47,14 @@ class Stock extends CI_Controller {
         }
     }
 
+    public function tui_jian ()
+    {
+        $this->load->model('stock_list_model');
+        $data['stock_list'] = $this->stock_list_model->tui_jian();
+
+        $this->load->view('lists', $data);
+    }
+
     public function update_stock_data ()
     {
         try {
