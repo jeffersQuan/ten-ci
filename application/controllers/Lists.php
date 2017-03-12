@@ -20,7 +20,7 @@ class Lists extends CI_Controller {
     public function init_stock()
     {
         $index = 1;
-        $max = 605000;
+        $max = 604500;
 
         $this->load->model('stock_list_model');
         $result = $this->stock_list_model->get_status();

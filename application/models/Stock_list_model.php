@@ -21,13 +21,19 @@ class Stock_list_model extends CI_Model {
     {
         $query = $this->db->query('select tss.code, ts.name from ten_stock_small as tss left join ten_stock as ts on tss.code=ts.code '
         . 'left join ten_zhangfu_leiji as tzl on tzl.code=tss.code left join ten_zhangfu as tz on tz.code=tss.code '
-        . ' where (tzl.d2<1.5 AND tzl.d2>-0.75) and ts.zhangfu>=0 and ts.zhangfu<1.5 and tz.d1<1.5 and tz.d1>-1 and tz.d2<1.5 and tz.d2>-1');
+        . ' where tzl.d9<4 and tzl.d9>0 and ts.chengjiaoe<15000 and ts.chengjiaoliang>0 and (tzl.d2<1.5 AND tzl.d2>-0.75) and ts.zhangfu>=0 and ts.zhangfu<1.5 and tz.d1<1.5 and tz.d1>-1 and tz.d2<1.5 and tz.d2>-1');
         return $query->result_array();
     }
 
     public function get_stock_selected()
     {
         $query = $this->db->query('select tss.code, ts.name from ten_stock_selected as tss left join ten_stock as ts on tss.code=ts.code');
+        return $query->result_array();
+    }
+
+    public function get_stock_small()
+    {
+        $query = $this->db->query('select tss.code, ts.name from ten_stock_small as tss left join ten_stock as ts on tss.code=ts.code order by ts.zhangfu desc');
         return $query->result_array();
     }
 

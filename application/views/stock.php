@@ -29,7 +29,7 @@
     <a href='./stock/tui_jian'>明日推荐</a>
 </div>
 <div class="form-group">
-    <a href='./huanshou'>换手榜</a>
+    <a href='./stock/small'>小盘股</a>
 </div>
 <div class="form-group">
     <a href='./diefu'>跌幅榜</a>
