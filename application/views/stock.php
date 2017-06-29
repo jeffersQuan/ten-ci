@@ -149,7 +149,7 @@
     }
     setTimeout(function () {
         window.location.reload();
-    }, 10 * 60000);
+    }, 1 * 60000);
 </script>
 </body>
 </html>
