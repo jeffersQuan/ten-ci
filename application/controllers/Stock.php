@@ -104,7 +104,6 @@ class Stock extends CI_Controller {
                 $this->cheng_jiao_liang_model->update_data($dataArr);
                 error_log('update_data: ' . $stockCode);
                 $this->set_update_progress(($index + 1) / $max);
-                sleep(1);
             }
             $this->stock_list_model->set_gengxinshuju(0);
 	    $this->set_update_progress(0);
