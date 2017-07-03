@@ -90,6 +90,10 @@ class Stock extends CI_Controller {
                 $stockCode = $stocks[$index]['code'];
                 $dataArr = $this->requestStockData($stockCode);
                 error_log('stock_data: ' . var_export($dataArr, true));
+		    
+		if (!$dataArr['code']) {
+		    continue;
+		}
 
                 $this->stock_list_model->update_data($dataArr);
                 $this->zui_xin_model->update_data($dataArr);
