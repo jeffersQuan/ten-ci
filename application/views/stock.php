@@ -83,7 +83,6 @@
         success: function (data) {
             if (data == 'ok') {
                 $('#update_data_status').html('已完成！');
-                window.name = 100;
             } else {
                 if (window.name && window.name == data) {
                     updateStockData();
