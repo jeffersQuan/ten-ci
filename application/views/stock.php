@@ -83,8 +83,14 @@
         success: function (data) {
             if (data == 'ok') {
                 $('#update_data_status').html('已完成！');
+                window.name = 100;
             } else {
-                $('#update_data_status').html(Number(data * 100).toFixed(4) + '%');
+                if (window.name && window.name == data) {
+                    updateStockData();
+                } else {
+                    window.name = data;
+                    $('#update_data_status').html(Number(data * 100).toFixed(4) + '%');
+                }
             }
         },
         error: function () {
