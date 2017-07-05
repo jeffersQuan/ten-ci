@@ -92,6 +92,7 @@ class Stock extends CI_Controller {
                 error_log('stock_data: ' . var_export($dataArr, true));
 		    
 		if (!$dataArr['code']) {
+		    $this->set_update_progress(($index + 1) / $max);
 		    continue;
 		}
 
