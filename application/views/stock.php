@@ -154,7 +154,7 @@
     }
     setTimeout(function () {
         window.location.reload();
-    }, 1.5 * 60000);
+    }, 1 * 60000);
 </script>
 </body>
 </html>
