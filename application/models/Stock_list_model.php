@@ -33,7 +33,7 @@ AND greatest(hs.d1,hs.d2,hs.d3,hs.d4,hs.d5) < 12
 AND least(zf.d1,zf.d2,zf.d3,zf.d4,zf.d5,zf.d6,zf.d7) > -5
 AND greatest(zf.d1,zf.d2,zf.d3,zf.d4,zf.d5,zf.d6,zf.d7) < 7
 AND least(zflj.d1,zflj.d2,zflj.d3,zflj.d4,zflj.d5,zflj.d6,zflj.d7) > -2
-AND zflj.d3 > 0
+AND zflj.d5 > 0
 AND s.zhangfu < 2 AND s.zhangfu > -1
 AND greatest(cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15,cjl.d16,cjl.d17,cjl.d18,cjl.d19) / s.chengjiaoliang > 3
 ORDER BY greatest(cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15,cjl.d16,cjl.d17,cjl.d18,cjl.d19) / s.chengjiaoliang DESC");
