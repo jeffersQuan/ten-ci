@@ -19,9 +19,24 @@ class Stock_list_model extends CI_Model {
 
     public function tui_jian ()
     {
-        $query = $this->db->query('select tss.code, ts.name from ten_stock_small as tss left join ten_stock as ts on tss.code=ts.code '
-        . 'left join ten_zhangfu_leiji as tzl on tzl.code=tss.code left join ten_zhangfu as tz on tz.code=tss.code '
-        . ' where tzl.d9<4 and tzl.d9>0 and ts.chengjiaoe<15000 and ts.chengjiaoliang>0 and (tzl.d2<1.5 AND tzl.d2>-0.75) and ts.zhangfu>=0 and ts.zhangfu<1.5 and tz.d1<1.5 and tz.d1>-1 and tz.d2<1.5 and tz.d2>-1');
+        $query = $this->db->query("SELECT s.code, s.name, s.huanshou, s.chengjiaoe,
+greatest(cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15,cjl.d16,cjl.d17,cjl.d18) / s.chengjiaoliang AS ratio_max
+FROM stock.ten_stock AS s
+  LEFT JOIN stock.ten_liutong AS lt ON s.code = lt.code
+  LEFT JOIN stock.ten_chengjiaoliang AS cjl ON s.code = cjl.code
+  LEFT JOIN stock.ten_huanshou AS hs ON s.code = hs.code
+  LEFT JOIN stock.ten_zhangfu AS zf ON s.code = zf.code
+  LEFT JOIN stock.ten_zhangfu_leiji AS zflj ON s.code = zflj.code
+WHERE s.liutong > 20 AND s.liutong < 100 AND s.chengjiaoliang > 0 AND s.huanshou < 4
+AND (s.name NOT LIKE '%S%' OR s.name NOT LIKE '%T%')
+AND greatest(hs.d1,hs.d2,hs.d3,hs.d4,hs.d5) < 12
+AND least(zf.d1,zf.d2,zf.d3,zf.d4,zf.d5,zf.d6,zf.d7) > -5
+AND greatest(zf.d1,zf.d2,zf.d3,zf.d4,zf.d5,zf.d6,zf.d7) < 7
+AND least(zflj.d1,zflj.d2,zflj.d3,zflj.d4,zflj.d5,zflj.d6,zflj.d7) > -2
+AND zflj.d3 > 0
+AND s.zhangfu < 2 AND s.zhangfu > -1
+AND greatest(cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15,cjl.d16,cjl.d17,cjl.d18) / s.chengjiaoliang > 3
+ORDER BY greatest(cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15,cjl.d16,cjl.d17,cjl.d18) / s.chengjiaoliang DESC");
         return $query->result_array();
     }
 
