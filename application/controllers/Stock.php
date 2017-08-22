@@ -40,7 +40,7 @@ class Stock extends CI_Controller {
 	    $this->load->helper('file');
 	    error_log('backup mysql');
 	    write_file('/var/www/back/mysql_backup.gz', $backup);
-	    
+	    $this->send_email();
             echo 'ok';
         } else {
             echo $result->update_progress;
