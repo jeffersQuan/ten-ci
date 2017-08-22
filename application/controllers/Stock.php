@@ -60,6 +60,7 @@ class Stock extends CI_Controller {
 	    $this->email->attach('/var/www/back/mysql_backup.gz');
 
 	    $this->email->send();
+	    $this->set_send_email(1);
         }
     }
 
@@ -276,5 +277,11 @@ class Stock extends CI_Controller {
         $this->load->model('stock_list_model');
 
         $this->stock_list_model->set_update_progress($progress);
+    }
+
+    private function set_send_email (status) {
+        $this->load->model('stock_list_model');
+
+        $this->stock_list_model->set_send_email(status);
     }
 }
