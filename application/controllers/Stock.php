@@ -39,8 +39,8 @@ class Stock extends CI_Controller {
 	    // Load the file helper and write the file to your server
 	    $this->load->helper('file');
 	    error_log('backup mysql');
-	    write_file('/var/www/back/mysql_backup.gz', $backup);
-	    $this->send_email();
+	    write_file('/var/www/ten-ci/www/back/mysql_backup.gz', $backup);
+	    // $this->send_email();
             echo 'ok';
         } else {
             echo $result->update_progress;
