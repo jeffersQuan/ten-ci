@@ -30,6 +30,16 @@ class Stock extends CI_Controller {
         $this->load->model('stock_list_model');
         $result = $this->stock_list_model->get_status();
         if ($result->gengxinshuju == 0) {
+	    // Load the DB utility class
+	    $this->load->dbutil();
+
+	    // Backup your entire database and assign it to a variable
+	    $backup = $this->dbutil->backup();
+
+	    // Load the file helper and write the file to your server
+	    $this->load->helper('file');
+	    write_file('/var/www/mysql_backup.gz', $backup);
+	    
             echo 'ok';
         } else {
             echo $result->update_progress;
