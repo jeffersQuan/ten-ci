@@ -119,6 +119,11 @@ ORDER BY greatest(cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,cjl.d11,cjl.d12,cjl
         $this->db->query('update ten_status set init_progress="' . $progress . '"');
     }
 
+    public function set_send_email($status=0)
+    {
+        $this->db->query('update ten_status set send_email="' . $status . '"');
+    }
+
     public function get_status()
     {
         $query = $this->db->query('select * from ten_status limit 1');
