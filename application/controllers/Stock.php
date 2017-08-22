@@ -47,6 +47,22 @@ class Stock extends CI_Controller {
         }
     }
 
+    private function send_email () {
+	$this->load->model('stock_list_model');
+        $result = $this->stock_list_model->get_status();
+        if ($result->send_email == 0) {
+            $this->load->library('email');
+
+	    $this->email->from('648580211@qq.com', 'quanjf');
+	    $this->email->to('648580211@qq.com');
+
+	    $this->email->subject('My sql backup');
+	    $this->email->attach('/var/www/back/mysql_backup.gz');
+
+	    $this->email->send();
+        }
+    }
+
     public function check_backup_status ()
     {
         $this->load->model('stock_list_model');
