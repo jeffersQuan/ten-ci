@@ -122,7 +122,9 @@ class Cheng_jiao_liang_model extends CI_Model
               LEFT JOIN stock.ten_chengjiaoliang AS cjl ON s.code = cjl.code
             WHERE s.chengjiaoliang > 0 AND (s.name NOT LIKE '%S%' OR s.name NOT LIKE '%T%') AND s.zhangfu >= 0
             AND least(cjl.d0,cjl.d1,cjl.d2,cjl.d3,cjl.d4,cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,
-            cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15) = s.chengjiaoliang");
+            cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15) = s.chengjiaoliang AND 
+            greatest(cjl.d0,cjl.d1,cjl.d2,cjl.d3,cjl.d4,cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,
+cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15) / s.chengjiaoliang > 3;");
 
         return $query->result_array();
     }
