@@ -117,16 +117,12 @@ class Cheng_jiao_liang_model extends CI_Model
         $zuixin_min = $this->zuixin_min;
         $zuixin_max = $this->zuixin_max;
         $shijing_max = $this->shijing_max;
-        $query = $this->db->query("SELECT s.name, s.code, s.zuixin, s.chengjiaoliang, s.liutong
-            FROM ten_stock AS s LEFT JOIN ten_chengjiaoliang AS c ON s.code = c.code
-            LEFT JOIN ten_zhangfu_leiji AS zl ON s.code = zl.code
-            WHERE s.name NOT LIKE '%S%' AND s.name NOT LIKE '%T%'
-            AND s.liutong < $liutong_max AND s.zuixin >= $zuixin_min AND s.zuixin <= $zuixin_max 
-            AND s.shijing <= $shijing_max 
-            AND s.zhangfu <= 5 
-            AND s.chengjiaoliang > 0 AND s.huanshou < 2 
-            AND s.chengjiaoliang = least(c.d0, c.d1, c.d2, c.d3, c.d4, c.d5, c.d6, c.d7, c.d8, c.d9, c.d10, c.d11, c.d12, c.d13, c.d14, c.d15,
-                c.d16, c.d17, c.d18, c.d19, c.d20, c.d21, c.d22, c.d23, c.d24, c.d25, c.d26, c.d27, c.d28, c.d29) ORDER BY s.liutong");
+        $query = $this->db->query("SELECT s.code, s.name, s.huanshou, s.chengjiaoliang
+            FROM stock.ten_stock AS s
+              LEFT JOIN stock.ten_chengjiaoliang AS cjl ON s.code = cjl.code
+            WHERE s.chengjiaoliang > 0 AND (s.name NOT LIKE '%S%' OR s.name NOT LIKE '%T%') AND s.zhangfu >= 0
+            AND least(cjl.d0,cjl.d1,cjl.d2,cjl.d3,cjl.d4,cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,
+            cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15) = s.chengjiaoliang");
 
         return $query->result_array();
     }
