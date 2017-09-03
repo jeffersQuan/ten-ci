@@ -124,6 +124,7 @@ class Cheng_jiao_liang_model extends CI_Model
             WHERE s.chengjiaoliang > 0 AND (s.name NOT LIKE '%S%' OR s.name NOT LIKE '%T%') AND s.zhangfu >= 0
             AND s.zhangfu < 5 AND s.zuixin < 35 AND s.liutong < 150
             AND greatest(zf.d0,zf.d1,zf.d2,zf.d3,zf.d4,zf.d5,zf.d6,zf.d7,zf.d8,zf.d9,zf.d10) < 9
+            AND leatest(cjl.d0,cjl.d1,cjl.d2,cjl.d3,cjl.d4,cjl.d5) = s.chengjiaoliang
             AND greatest(cjl.d0,cjl.d1,cjl.d2,cjl.d3,cjl.d4,cjl.d5,cjl.d6,cjl.d7,cjl.d8,cjl.d9,cjl.d10,
 cjl.d11,cjl.d12,cjl.d13,cjl.d14,cjl.d15) / s.chengjiaoliang > 3;");
 
