@@ -38,7 +38,7 @@ class Stock extends CI_Controller {
 
 	    // Load the file helper and write the file to your server
 	    $this->load->helper('file');
-	    error_log('backup mysql');
+	    log_message('info','backup mysql');
 	    write_file('/var/www/ten-ci/www/back/mysql_backup.gz', $backup);
 	    // $this->send_email();
             echo 'ok';
@@ -117,7 +117,7 @@ class Stock extends CI_Controller {
                 error_log('-------');
                 $stockCode = $stocks[$index]['code'];
                 $dataArr = $this->requestStockData($stockCode);
-                error_log('stock_data: ' . var_export($dataArr, true));
+                log_message('info','stock_data: ' . var_export($dataArr, true));
 		    
 		if (!$dataArr['code']) {
 		    $this->set_update_progress(($index + 1) / $max);
@@ -131,16 +131,16 @@ class Stock extends CI_Controller {
                 $this->huan_shou_model->update_data($dataArr);
                 $this->cheng_jiao_e_model->update_data($dataArr);
                 $this->cheng_jiao_liang_model->update_data($dataArr);
-                error_log('update_data: ' . $stockCode);
+                log_message('info','update_data: ' . $stockCode);
                 $this->set_update_progress(($index + 1) / $max);
             }
             $this->stock_list_model->set_gengxinshuju(0);
 	    $this->set_update_progress(0);
-            error_log('update_data success!');
+            log_message('info','update_data success!');
         } catch (Error $e) {
-            error_log('update_data error!' . var_export($e, true));
+            log_message('info','update_data error!' . var_export($e, true));
         } catch (Exception $e) {
-            error_log('update_data exception!' . var_export($e, true));
+            log_message('info','update_data exception!' . var_export($e, true));
         }
     }
 
@@ -201,9 +201,9 @@ class Stock extends CI_Controller {
             $request->execute();
             $response = $request->getResponse();
         } catch (Error $e) {
-            error_log('Request error!');
+            log_message('info','Request error!');
         } catch (Exception $e) {
-            error_log('Request exception!');
+            log_message('info','Request exception!');
         }
 
         $resArr = explode('~', $response);
