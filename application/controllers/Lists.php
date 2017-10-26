@@ -40,7 +40,7 @@ class Lists extends CI_Controller {
         $this->load->model('stock_list_model');
 
         $this->stock_list_model->set_gengxinliebiao(1);
-        error_log('start init data!');
+        log_message('info','start init data!');
 
         for ($index; $index < $max; $index++) {
             if ($index < 3000) {
