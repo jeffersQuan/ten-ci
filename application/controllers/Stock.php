@@ -95,7 +95,7 @@ class Stock extends CI_Controller {
             $this->load->model('zui_xin_model');
 
             $this->stock_list_model->set_gengxinshuju(1);
-            error_log('start update data!');
+            log_message('info','start update data!');
             $stocks = $this->stock_list_model->get_stock_list_all();
             $max = count($stocks);
             $index=0;
