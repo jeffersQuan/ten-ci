@@ -136,6 +136,16 @@ class Stock extends CI_Controller {
             }
             $this->stock_list_model->set_gengxinshuju(0);
 	    $this->set_update_progress(0);
+	    // Load the DB utility class
+	    $this->load->dbutil();
+
+	    // Backup your entire database and assign it to a variable
+	    $backup = $this->dbutil->backup();
+
+	    // Load the file helper and write the file to your server
+	    $this->load->helper('file');
+	    log_message('info','backup mysql');
+	    write_file('/var/www/ten-ci/www/back/mysql_backup.gz', $backup);
             log_message('info','update_data success!');
         } catch (Error $e) {
             log_message('info','update_data error!' . var_export($e, true));
