@@ -46,26 +46,26 @@ class Lists extends CI_Controller {
             if ($index < 3000) {
                 $stockCode = $this->getStockCode('sz', $index);
                 $dataArr = $this->requestStockData($stockCode);
-                error_log('init: ' . var_export($dataArr, true));
+                log_message('info','init: ' . var_export($dataArr, true));
 
                 $this->stock_list_model->update_stock_list($dataArr);
-                error_log('init_stock: ' . $stockCode);
+                log_message('info','init_stock: ' . $stockCode);
                 sleep(0.1);
             } else if ($index >= 300000 && $index <= 301000) {
                 $stockCode = $this->getStockCode('sz', $index);
                 $dataArr = $this->requestStockData($stockCode);
-                error_log('init: ' . var_export($dataArr, true));
+                log_message('info','init: ' . var_export($dataArr, true));
 
                 $this->stock_list_model->update_stock_list($dataArr);
-                error_log('init_stock: ' . $stockCode);
+                log_message('info','init_stock: ' . $stockCode);
                 sleep(0.1);
             } else if ($index >= 600000) {
                 $stockCode = $this->getStockCode('sh', $index);
                 $dataArr = $this->requestStockData($stockCode);
-                error_log('init: ' . var_export($dataArr, true));
+                log_message('info','init: ' . var_export($dataArr, true));
 
                 $this->stock_list_model->update_stock_list($dataArr);
-                error_log('init_stock: ' . $stockCode);
+                log_message('info','init_stock: ' . $stockCode);
                 sleep(0.1);
             } else {
                 //没有对应的代码
