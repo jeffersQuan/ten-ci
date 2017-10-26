@@ -22,12 +22,11 @@ class Lists extends CI_Controller {
         $index = 1;
         $max = 604500;
 
-        $params = $_GET;
+        $start = isset($_GET['start'])? $_GET['start'] : '';
+        $end = isset($_GET['end'])? $_GET['end'] : '';
 
-        if (!$params.isset($start) || !$params.isset($end)) {
+        if (!$start || !$end) {
             exit('缺少参数');
-        } else {
-            exit(var_export($params.isset($start), true));
         }
 
         $this->load->model('stock_list_model');
@@ -51,8 +50,8 @@ class Lists extends CI_Controller {
         log_message('info','start init data!');
 
         for (; $index < $max; $index++) {
-            $stockCode = $index;
-            $dataArr = $this->requestStockData($stockCode, $params['start'], $params['end']);
+            $stockCode = $this->getStockCode($index);
+            $dataArr = $this->requestStockData($stockCode, $start, $end);
             log_message('info','init: ' . var_export($dataArr, true));
 
             $this->stock_list_model->update_stock_list($dataArr);
@@ -65,6 +64,23 @@ class Lists extends CI_Controller {
 
     }
 
+    private function getStockCode($index)
+    {
+        $code = '';
+
+        if ($index > 100000) {
+            $code = '' . $index;
+        } else {
+            $code = $code . $index;
+            while (strlen($code) < 6) {
+                $code = '0' . $code;
+            }
+        }
+
+        return $code;
+    }
+
+
     private function requestStockData($stockCode, $start, $end)
     {
         $url = 'http://q.stock.sohu.com/hisHq?code=';
@@ -73,7 +89,9 @@ class Lists extends CI_Controller {
         $request->execute();
         $response = $request->getResponse();
 
-        if ($response['status'] != 0) {
+        log_message('info', var_export($response, true));
+
+        if ($response->status != 0) {
             return array();
         }
 

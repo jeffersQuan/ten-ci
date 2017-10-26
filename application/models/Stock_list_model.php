@@ -18,32 +18,22 @@ class Stock_list_model extends CI_Model {
     }
 
     public function update_stock_list ($arr) {
-        if (count($arr) > 0) {
-            $query = $this->db->query('select * from ten_stock where code = "' . $arr['code'] . '"');
-            $result = $query->row_array();
-            $stock['name'] = $arr['name'];
-            $stock['code'] = $arr['code'];
-            $stock['zuixin'] = $arr['zuixin'];
-            $stock['kaipan'] = $arr['kaipan'];
-            $stock['chengjiaoliang'] = $arr['chengjiaoliang'];
-            $stock['zhangfu'] = $arr['zhangfu'];
-            $stock['zuigao'] = $arr['zuigao'];
-            $stock['zuidi'] = $arr['zuidi'];
-            $stock['liutong'] = $arr['liutong'];
-            $stock['chengjiaoe'] = $arr['chengjiaoe'];
-            $stock['huanshou'] = $arr['huanshou'];
-            $stock['shiying'] = $arr['shiying'];
-            $stock['shijing'] = $arr['shijing'];
+        $s_data = $arr[0];
+        $code = $s_data['code'];
+        $kaipan = $s_data['kaipan'];
+        $zuixin = $s_data['zuixin'];
+        $zhangfu = $s_data['zhangfu'];
+        $chengjiaoe = $s_data['chengjiaoe'];
+        $chengjiaoliang = $s_data['chengjiaoliang'];
+        $huanshou = $s_data['huanshou'];
+        $query = $this->db->query('select * from ten_stock where code = "' . $code . '"');
+        $result = $query->row_array();
 
-            if (!isset($result)) {
-                $this->db->insert('ten_stock', $stock);
-            } else {
-                $this->db->query('update ten_stock set name="' . $stock['name'] . '", zuixin=' . $stock['zuixin']
-                    . ', kaipan=' . $stock['kaipan'] . ', chengjiaoliang=' . $stock['chengjiaoliang'] . ', zhangfu=' . $stock['zhangfu']
-                    . ', zuigao=' . $stock['zuigao'] . ', zuidi=' . $stock['zuidi'] . ', liutong=' . $stock['liutong']
-                    . ', chengjiaoe=' . $stock['chengjiaoe'] . ', huanshou=' . $stock['huanshou'] . ', shiying=' . $stock['shiying']
-                    . ', shijing=' . $stock['shijing'] . ' where code="' . $stock['code'] . '"');
-            }
+        if (count($result) < 1) {
+            $this->db->insert('ten_stock', $s_data);
+        } else {
+            $this->db->query("update ten_stock set kaipan=$kaipan, zuixin=$zuixin, zhangfu=$zhangfu, chengjiaoe=$chengjiaoe, 
+                    chengjiaoliang=$chengjiaoliang, huanshou=$huanshou where code=$code");
         }
     }
 

@@ -71,9 +71,10 @@ class Stock extends CI_Controller {
 
     public function update_stock_data ()
     {
-        $params = $_GET;
+        $start = isset($_GET['start'])? $_GET['start'] : '';
+        $end = isset($_GET['end'])? $_GET['end'] : '';
 
-        if (!($params.isset($start) && $params['start']) || !($params.isset($end) && $params['end'])) {
+        if (!$start || !$end) {
             exit('缺少参数');
         }
 
@@ -106,7 +107,7 @@ class Stock extends CI_Controller {
 
             for (; $index < $max; $index++) {
                 $stockCode = 'cn_' . $stocks[$index]['code'];
-                $dataArr = $this->requestStockData($stockCode, $params['start'], $params['end']);
+                $dataArr = $this->requestStockData($stockCode, $start, $end);
 		    
                 if (!count($dataArr)) {
                     $this->set_update_progress(($index + 1) / $max);
@@ -169,7 +170,7 @@ class Stock extends CI_Controller {
             log_message('info','Request exception!');
         }
 
-        if ($response['status'] != 0) {
+        if ($response->status != 0) {
             return array();
         }
 

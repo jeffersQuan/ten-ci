@@ -122,13 +122,25 @@
         }
     });
 
+    function getParameterByName(name, href) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(href || window.location.href);
+        if (results == null)
+            return "";
+        else
+            return decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
     function updateStockData() {
         $.ajax({
             url: '/stock/update_stock_data',
             cache: false,
             timeout: 10 * 60 * 1000,
             data: {
-
+                start: getParameterByName('start'),
+                end: getParameterByName('end')
             },
             success: function (data) {
                 console.log(data);

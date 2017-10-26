@@ -46,13 +46,16 @@
     <button id="next" class="btn btn-default">下一页</button>
 </div>
 <script>
-    function getParamByName (name, url) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results;
 
-        results = regex.exec(url || location.href);
-
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    function getParameterByName(name, href) {
+        name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+        var regexS = "[\\?&]" + name + "=([^&#]*)";
+        var regex = new RegExp(regexS);
+        var results = regex.exec(href || window.location.href);
+        if (results == null)
+            return "";
+        else
+            return decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
     $('#init_stock').on('click', function () {
@@ -61,6 +64,10 @@
                 url: './lists/init_stock',
                 cache: false,
                 timeout: 5 * 60 * 1000,
+                data: {
+                    start: getParameterByName('start'),
+                    end: getParameterByName('end')
+                },
                 success: function (data) {
                     console.log('更新数据库成功！');
                     console.log(data);
