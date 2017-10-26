@@ -73,9 +73,8 @@ class Stock extends CI_Controller {
     {
         $params = $_GET;
 
-        if (!$params.isset($start) || !$params.isset($end)) {
-            echo '缺少参数';
-            return;
+        if (!($params.isset($start) && $params['start']) || !($params.isset($end) && $params['end'])) {
+            exit('缺少参数');
         }
 
         try {
