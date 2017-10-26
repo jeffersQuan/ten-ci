@@ -27,7 +27,7 @@ class Lists extends CI_Controller {
         if (!$params.isset($start) || !$params.isset($end)) {
             exit('缺少参数');
         } else {
-            exit($params.isset($start));
+            exit(var_export($params.isset($start), true));
         }
 
         $this->load->model('stock_list_model');
