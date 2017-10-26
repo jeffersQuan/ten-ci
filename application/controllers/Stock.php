@@ -25,42 +25,28 @@ class Stock extends CI_Controller {
         }
     }
 
+    private function backup_mysql() {
+        // Load the DB utility class
+        $this->load->dbutil();
+
+        // Backup your entire database and assign it to a variable
+        $backup = $this->dbutil->backup();
+
+        // Load the file helper and write the file to your server
+        $this->load->helper('file');
+        log_message('info','backup mysql');
+        write_file('/var/www/ten-ci/www/back/mysql_backup.gz', $backup);
+    }
+
     public function check_update_data_status ()
     {
         $this->load->model('stock_list_model');
         $result = $this->stock_list_model->get_status();
         if ($result->gengxinshuju == 0) {
-	    // Load the DB utility class
-	    $this->load->dbutil();
-
-	    // Backup your entire database and assign it to a variable
-	    $backup = $this->dbutil->backup();
-
-	    // Load the file helper and write the file to your server
-	    $this->load->helper('file');
-	    log_message('info','backup mysql');
-	    write_file('/var/www/ten-ci/www/back/mysql_backup.gz', $backup);
-	    // $this->send_email();
             echo 'ok';
+            $this->backup_mysql();
         } else {
             echo $result->update_progress;
-        }
-    }
-
-    private function send_email () {
-	$this->load->model('stock_list_model');
-        $result = $this->stock_list_model->get_status();
-        if ($result->send_email == 0) {
-            $this->load->library('email');
-
-	    $this->email->from('648580211@qq.com', 'quanjf');
-	    $this->email->to('648580211@qq.com');
-
-	    $this->email->subject('My sql backup');
-	    $this->email->attach('/var/www/back/mysql_backup.gz');
-
-	    $this->email->send();
-	    $this->set_send_email(1);
         }
     }
 
@@ -85,11 +71,17 @@ class Stock extends CI_Controller {
 
     public function update_stock_data ()
     {
+        $params = $_GET;
+
+        if (!$params.isset($start) || !$params.isset($end)) {
+            echo '缺少参数';
+            return;
+        }
+
         try {
             $this->load->model('cheng_jiao_e_model');
             $this->load->model('cheng_jiao_liang_model');
             $this->load->model('huan_shou_model');
-            $this->load->model('liu_tong_model');
             $this->load->model('stock_list_model');
             $this->load->model('zhang_fu_model');
             $this->load->model('zui_xin_model');
@@ -113,39 +105,27 @@ class Stock extends CI_Controller {
 
             include 'JJG/Request.php';
 
-            for ($index; $index < $max; $index++) {
-                error_log('-------');
-                $stockCode = $stocks[$index]['code'];
-                $dataArr = $this->requestStockData($stockCode);
-                log_message('info','stock_data: ' . var_export($dataArr, true));
+            for (; $index < $max; $index++) {
+                $stockCode = 'cn_' . $stocks[$index]['code'];
+                $dataArr = $this->requestStockData($stockCode, $params['start'], $params['end']);
 		    
-		if (!$dataArr['code']) {
-		    $this->set_update_progress(($index + 1) / $max);
-		    continue;
-		}
+                if (!count($dataArr)) {
+                    $this->set_update_progress(($index + 1) / $max);
+                    continue;
+                }
 
                 $this->stock_list_model->update_data($dataArr);
                 $this->zui_xin_model->update_data($dataArr);
                 $this->zhang_fu_model->update_data($dataArr);
-                $this->liu_tong_model->update_data($dataArr);
                 $this->huan_shou_model->update_data($dataArr);
                 $this->cheng_jiao_e_model->update_data($dataArr);
                 $this->cheng_jiao_liang_model->update_data($dataArr);
-                log_message('info','update_data: ' . $stockCode);
+
                 $this->set_update_progress(($index + 1) / $max);
             }
             $this->stock_list_model->set_gengxinshuju(0);
-	    $this->set_update_progress(0);
-	    // Load the DB utility class
-	    $this->load->dbutil();
-
-	    // Backup your entire database and assign it to a variable
-	    $backup = $this->dbutil->backup();
-
-	    // Load the file helper and write the file to your server
-	    $this->load->helper('file');
-	    log_message('info','backup mysql');
-	    write_file('/var/www/ten-ci/www/back/mysql_backup.gz', $backup);
+	        $this->set_update_progress(0);
+	        $this->backup_mysql();
             log_message('info','update_data success!');
         } catch (Error $e) {
             log_message('info','update_data error!' . var_export($e, true));
@@ -159,7 +139,6 @@ class Stock extends CI_Controller {
         $this->load->model('cheng_jiao_e_model');
         $this->load->model('cheng_jiao_liang_model');
         $this->load->model('huan_shou_model');
-        $this->load->model('liu_tong_model');
         $this->load->model('stock_list_model');
         $this->load->model('zhang_fu_model');
         $this->load->model('zui_xin_model');
@@ -168,7 +147,6 @@ class Stock extends CI_Controller {
         $this->stock_list_model->back_up();
         $this->zui_xin_model->back_up();
         $this->zhang_fu_model->back_up();
-        $this->liu_tong_model->back_up();
         $this->huan_shou_model->back_up();
         $this->cheng_jiao_e_model->back_up();
         $this->cheng_jiao_liang_model->back_up();
@@ -176,38 +154,14 @@ class Stock extends CI_Controller {
         echo 0;
     }
 
-    public function get_stock_selected ()
+    private function requestStockData($stockCode, $start, $end)
     {
-        $this->load->model('stock_list_model');
-        $data['stock_list'] = $this->stock_list_model->get_stock_selected();
-        $this->load->view('lists', $data);
-    }
+        $response = array();
 
-    public function add_stock_selected ($code)
-    {
-        if (!$code) {
-            return;
-        }
-        $this->load->model('stock_list_model');
-        $data['stock_list'] = $this->stock_list_model->add_stock_selected($code);
-        echo 'success';
-    }
-
-    public function remove_stock_selected ($code)
-    {
-        if (!$code) {
-            return;
-        }
-        $this->load->model('stock_list_model');
-        $this->stock_list_model->remove_stock_selected($code);
-        echo 'success';
-    }
-
-    private function requestStockData($stockCode)
-    {
         try {
-            $request = new Request('http://qt.gtimg.cn/q=' . $stockCode);
-            $request->setContentType('application/x-javascript; charset=GBK');
+            $url = 'http://q.stock.sohu.com/hisHq?code=';
+            $request = new Request($url . $stockCode . '&start=' . $start . '&end=' . $end);
+            $request->setContentType('application/json; charset=utf8');
             $request->execute();
             $response = $request->getResponse();
         } catch (Error $e) {
@@ -216,68 +170,24 @@ class Stock extends CI_Controller {
             log_message('info','Request exception!');
         }
 
-        $resArr = explode('~', $response);
-
-        if (count($resArr) < 2) {
+        if ($response['status'] != 0) {
             return array();
         }
 
-        $dataArr['name'] = iconv('GBK', 'UTF-8', $resArr[1]);
-        $dataArr['code'] = $stockCode;
-        $dataArr['zuixin'] = $resArr[3];
-        $dataArr['kaipan'] = $resArr[5];
-        $dataArr['chengjiaoliang'] = $resArr[6];
-        $dataArr['zhangfu'] = $resArr[32];
-        $dataArr['zuigao'] = $resArr[41];
-        $dataArr['zuidi'] = $resArr[42];
-        $dataArr['liutong'] = $resArr[44];
-        $dataArr['chengjiaoe'] = $resArr[37];
-        $dataArr['huanshou'] = $resArr[38];
-        $dataArr['shiying'] = $resArr[39];
-        $dataArr['shijing'] = $resArr[46];
+        $res_data = $response['hq'];
+        $dataArr = array();
 
-        if (!$dataArr['zuixin']) {
-            $dataArr['zuixin'] = 0;
-        }
+        for ($i = 0; $i < count($res_data); $i++) {
+            $s_data = $res_data[$i];
+            $data['code'] = $stockCode;
+            $data['kaipan'] = $s_data[1];
+            $data['zuixin'] = $s_data[2];
+            $data['zhangfu'] = $s_data[4];
+            $data['chengjiaoliang'] = $s_data[7];
+            $data['chengjiaoe'] = $s_data[8];
+            $data['huanshou'] = $s_data[9];
 
-        if (!$dataArr['kaipan']) {
-            $dataArr['kaipan'] = 0;
-        }
-
-        if (!$dataArr['chengjiaoliang']) {
-            $dataArr['chengjiaoliang'] = 0;
-        }
-
-        if (!$dataArr['zhangfu']) {
-            $dataArr['zhangfu'] = 0;
-        }
-
-        if (!$dataArr['zuigao']) {
-            $dataArr['zuigao'] = 0;
-        }
-
-        if (!$dataArr['zuidi']) {
-            $dataArr['zuidi'] = 0;
-        }
-
-        if (!$dataArr['liutong']) {
-            $dataArr['liutong'] = 0;
-        }
-
-        if (!$dataArr['chengjiaoe']) {
-            $dataArr['chengjiaoe'] = 0;
-        }
-
-        if (!$dataArr['huanshou']) {
-            $dataArr['huanshou'] = 0;
-        }
-
-        if (!$dataArr['shiying']) {
-            $dataArr['shiying'] = 0;
-        }
-
-        if (!$dataArr['shijing']) {
-            $dataArr['shijing'] = 0;
+            array_unshift($dataArr, $data);
         }
 
         return $dataArr;
@@ -287,11 +197,5 @@ class Stock extends CI_Controller {
         $this->load->model('stock_list_model');
 
         $this->stock_list_model->set_update_progress($progress);
-    }
-
-    private function set_send_email ($status) {
-        $this->load->model('stock_list_model');
-
-        $this->stock_list_model->set_send_email($status);
     }
 }

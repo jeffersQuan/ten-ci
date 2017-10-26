@@ -20,21 +20,6 @@
     <a href='./lists'>股票列表</a>
 </div>
 <div class="form-group">
-    <a href='./selected'>自选列表</a>
-</div>
-<div class="form-group">
-    <a href='./chengjiaoliang/lowest_30'>30日成交新低</a>
-</div>
-<div class="form-group">
-    <a href='./stock/tui_jian'>明日推荐</a>
-</div>
-<div class="form-group">
-    <a href='./small'>小盘股</a>
-</div>
-<div class="form-group">
-    <a href='./diefu'>跌幅榜</a>
-</div>
-<div class="form-group">
     &nbsp;
 </div>
 <div class="form-group">
@@ -83,6 +68,7 @@
         success: function (data) {
             if (data == 'ok') {
                 $('#update_data_status').html('已完成！');
+                window.name = '';
             } else {
                 if (window.name && window.name == data) {
                     updateStockData();
@@ -141,6 +127,9 @@
             url: '/stock/update_stock_data',
             cache: false,
             timeout: 10 * 60 * 1000,
+            data: {
+
+            },
             success: function (data) {
                 console.log(data);
                 if (data == 0) {
@@ -153,7 +142,9 @@
         });
     }
     setTimeout(function () {
-        window.location.reload();
+        if (window.name) {
+            window.location.reload();
+        }
     }, 1 * 60000);
 </script>
 </body>

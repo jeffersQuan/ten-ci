@@ -22,6 +22,13 @@ class Lists extends CI_Controller {
         $index = 1;
         $max = 604500;
 
+        $params = $_GET;
+
+        if (!$params.isset($start) || !$params.isset($end)) {
+            echo '缺少参数';
+            return;
+        }
+
         $this->load->model('stock_list_model');
         $result = $this->stock_list_model->get_status();
         $progress = $result->init_progress;
@@ -42,34 +49,14 @@ class Lists extends CI_Controller {
         $this->stock_list_model->set_gengxinliebiao(1);
         log_message('info','start init data!');
 
-        for ($index; $index < $max; $index++) {
-            if ($index < 3000) {
-                $stockCode = $this->getStockCode('sz', $index);
-                $dataArr = $this->requestStockData($stockCode);
-                log_message('info','init: ' . var_export($dataArr, true));
+        for (; $index < $max; $index++) {
+            $stockCode = $index;
+            $dataArr = $this->requestStockData($stockCode, $params['start'], $params['end']);
+            log_message('info','init: ' . var_export($dataArr, true));
 
-                $this->stock_list_model->update_stock_list($dataArr);
-                log_message('info','init_stock: ' . $stockCode);
-                sleep(0.1);
-            } else if ($index >= 300000 && $index <= 301000) {
-                $stockCode = $this->getStockCode('sz', $index);
-                $dataArr = $this->requestStockData($stockCode);
-                log_message('info','init: ' . var_export($dataArr, true));
-
-                $this->stock_list_model->update_stock_list($dataArr);
-                log_message('info','init_stock: ' . $stockCode);
-                sleep(0.1);
-            } else if ($index >= 600000) {
-                $stockCode = $this->getStockCode('sh', $index);
-                $dataArr = $this->requestStockData($stockCode);
-                log_message('info','init: ' . var_export($dataArr, true));
-
-                $this->stock_list_model->update_stock_list($dataArr);
-                log_message('info','init_stock: ' . $stockCode);
-                sleep(0.1);
-            } else {
-                //没有对应的代码
-            }
+            $this->stock_list_model->update_stock_list($dataArr);
+            log_message('info','init_stock: ' . $stockCode);
+            sleep(0.1);
             $this->set_init_progress(($index + 1) / $max);
         }
 
@@ -77,93 +64,32 @@ class Lists extends CI_Controller {
 
     }
 
-    private function getStockCode($type = 'sz', $index)
+    private function requestStockData($stockCode, $start, $end)
     {
-        $code = '';
-        if ($type == 'sz') {
-            if ($index > 100000) {
-                $code = 'sz' . $index;
-            } else {
-                $code = $code . $index;
-                while (strlen($code) < 6) {
-                    $code = '0' . $code;
-                }
-                $code = 'sz' . $code;
-            }
-        } else if ($type == 'sh') {
-            $code = 'sh' . $index;
-        }
-        return $code;
-    }
-
-    private function requestStockData($stockCode)
-    {
-        $request = new Request('http://qt.gtimg.cn/q=' . $stockCode);
-        $request->setContentType('application/x-javascript; charset=GBK');
+        $url = 'http://q.stock.sohu.com/hisHq?code=';
+        $request = new Request($url . $stockCode . '&start=' . $start . '&end=' . $end);
+        $request->setContentType('application/json; charset=utf8');
         $request->execute();
         $response = $request->getResponse();
-        $resArr = explode('~', $response);
 
-        if (count($resArr) < 2) {
+        if ($response['status'] != 0) {
             return array();
         }
 
-        $dataArr['name'] = iconv('GBK', 'UTF-8', $resArr[1]);
-        $dataArr['code'] = $stockCode;
-        $dataArr['zuixin'] = $resArr[3];
-        $dataArr['kaipan'] = $resArr[5];
-        $dataArr['chengjiaoliang'] = $resArr[6];
-        $dataArr['zhangfu'] = $resArr[32];
-        $dataArr['zuigao'] = $resArr[41];
-        $dataArr['zuidi'] = $resArr[42];
-        $dataArr['liutong'] = $resArr[44];
-        $dataArr['chengjiaoe'] = $resArr[37];
-        $dataArr['huanshou'] = $resArr[38];
-        $dataArr['shiying'] = $resArr[39];
-        $dataArr['shijing'] = $resArr[46];
+        $res_data = $response['hq'];
+        $dataArr = array();
 
-        if (!$dataArr['zuixin']) {
-            $dataArr['zuixin'] = 0;
-        }
+        for ($i = 0; $i < count($res_data); $i++) {
+            $s_data = $res_data[$i];
+            $data['code'] = $stockCode;
+            $data['kaipan'] = $s_data[1];
+            $data['zuixin'] = $s_data[2];
+            $data['zhangfu'] = $s_data[4];
+            $data['chengjiaoliang'] = $s_data[7];
+            $data['chengjiaoe'] = $s_data[8];
+            $data['huanshou'] = $s_data[9];
 
-        if (!$dataArr['kaipan']) {
-            $dataArr['kaipan'] = 0;
-        }
-
-        if (!$dataArr['chengjiaoliang']) {
-            $dataArr['chengjiaoliang'] = 0;
-        }
-
-        if (!$dataArr['zhangfu']) {
-            $dataArr['zhangfu'] = 0;
-        }
-
-        if (!$dataArr['zuigao']) {
-            $dataArr['zuigao'] = 0;
-        }
-
-        if (!$dataArr['zuidi']) {
-            $dataArr['zuidi'] = 0;
-        }
-
-        if (!$dataArr['liutong']) {
-            $dataArr['liutong'] = 0;
-        }
-
-        if (!$dataArr['chengjiaoe']) {
-            $dataArr['chengjiaoe'] = 0;
-        }
-
-        if (!$dataArr['huanshou']) {
-            $dataArr['huanshou'] = 0;
-        }
-
-        if (!$dataArr['shiying']) {
-            $dataArr['shiying'] = 0;
-        }
-
-        if (!$dataArr['shijing']) {
-            $dataArr['shijing'] = 0;
+            array_unshift($dataArr, $data);
         }
 
         return $dataArr;

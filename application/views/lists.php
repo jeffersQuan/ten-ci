@@ -11,9 +11,6 @@
             代码
         </th>
         <th class="text-center">
-            名称
-        </th>
-        <th class="text-center">
             最新价
         </th>
         <th class="text-center">
@@ -29,9 +26,6 @@
         <tr>
             <td>
                 <?php echo substr($stock['code'], 2); ?>
-            </td>
-            <td>
-                <?php echo $stock['name']; ?>
             </td>
             <td>
                 <?php echo $stock['zuixin']; ?>
