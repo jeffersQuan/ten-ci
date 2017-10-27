@@ -104,6 +104,10 @@ class Lists extends CI_Controller {
 
         log_message('info', var_export($response, true));
 
+        if (!$response) {
+            return null;
+        }
+
         if (is_string($response)) {
             $response = json_decode($response);
         }
