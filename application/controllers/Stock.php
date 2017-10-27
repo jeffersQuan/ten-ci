@@ -90,7 +90,6 @@ class Stock extends CI_Controller {
             log_message('info','start update data!');
             $stocks = $this->stock_list_model->get_stock_list_all();
             $max = count($stocks);
-            $max = 3;
             $index=0;
             $result = $this->stock_list_model->get_status();
             $progress = $result->update_progress;
