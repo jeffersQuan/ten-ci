@@ -26,14 +26,14 @@ class Stock_list_model extends CI_Model {
         $chengjiaoe = $s_data['chengjiaoe'];
         $chengjiaoliang = $s_data['chengjiaoliang'];
         $huanshou = $s_data['huanshou'];
-        $query = $this->db->query('select * from ten_stock where code = "' . $code . '"');
+        $query = $this->db->query("select * from ten_stock where code = '$code'");
         $result = $query->row_array();
 
         if (count($result) < 1) {
             $this->db->insert('ten_stock', $s_data);
         } else {
             $this->db->query("update ten_stock set kaipan=$kaipan, zuixin=$zuixin, zhangfu=$zhangfu, chengjiaoe=$chengjiaoe, 
-                    chengjiaoliang=$chengjiaoliang, huanshou=$huanshou where code=$code");
+                    chengjiaoliang=$chengjiaoliang, huanshou=$huanshou where code='$code'");
         }
     }
 
@@ -90,7 +90,7 @@ class Stock_list_model extends CI_Model {
             $this->db->insert('ten_stock', $s_data);
         } else {
             $this->db->query("update ten_stock set kaipan=$kaipan, zuixin=$zuixin, zhangfu=$zhangfu, chengjiaoe=$chengjiaoe, 
-                    chengjiaoliang=$chengjiaoliang, huanshou=$huanshou where code=$code");
+                    chengjiaoliang=$chengjiaoliang, huanshou=$huanshou where code='$code'");
         }
     }
 

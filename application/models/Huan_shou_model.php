@@ -9,7 +9,7 @@ class Huan_shou_model extends CI_Model {
     {
         $s_data = $arr[0];
         $code = $s_data['code'];
-        $query = $this->db->query("select * from ten_huanshou where code = $code");
+        $query = $this->db->query("select * from ten_huanshou where code = '$code'");
         $query_result = $query->row_array();
         $huanshou_arr = array();
 
@@ -24,9 +24,9 @@ class Huan_shou_model extends CI_Model {
             $sql = "update ten_huanshou set ";
 
             for ($i = 0; $i < count($arr); $i++) {
-                array_unshift($huanshou_arr,'d' . $i=$arr[$i]['huanshou']);
+                array_push($huanshou_arr,'d' . $i . '=' . $arr[$i]['huanshou']);
             }
-            $sql = $sql . join(',',$huanshou_arr) . " where code=$code";
+            $sql = $sql . join(',',$huanshou_arr) . " where code='$code'";
             $this->db->query($sql);
         }
     }
@@ -104,7 +104,7 @@ class Huan_shou_model extends CI_Model {
                d28=$d27,d29=$d28,d30=$d29,d31=$d30,d32=$d31,d33=$d32,d34=$d33,d35=$d34,d36=$d35,d37=$d36,
                d38=$d37,d39=$d38,d40=$d39,d41=$d40,d42=$d41,d43=$d42,d44=$d43,d45=$d44,d46=$d45,d47=$d46,
                d48=$d47,d49=$d48,d50=$d49,d51=$d50,d52=$d51,d53=$d52,d54=$d53,d55=$d54,d56=$d55,d57=$d56,
-               d58=$d57,d59=$d58,d60=$d59 where code=$code");
+               d58=$d57,d59=$d58,d60=$d59 where code='$code'");
         }
     }
 

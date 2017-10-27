@@ -90,6 +90,7 @@ class Stock extends CI_Controller {
             log_message('info','start update data!');
             $stocks = $this->stock_list_model->get_stock_list_all();
             $max = count($stocks);
+            $max = 3;
             $index=0;
             $result = $this->stock_list_model->get_status();
             $progress = $result->update_progress;
@@ -106,10 +107,11 @@ class Stock extends CI_Controller {
             include 'JJG/Request.php';
 
             for (; $index < $max; $index++) {
-                $stockCode = 'cn_' . $stocks[$index]['code'];
+                $index = floor($index);
+                $stockCode = $stocks[$index]['code'];
                 $dataArr = $this->requestStockData($stockCode, $start, $end);
 		    
-                if (!count($dataArr)) {
+                if (!$dataArr) {
                     $this->set_update_progress(($index + 1) / $max);
                     continue;
                 }
@@ -156,25 +158,33 @@ class Stock extends CI_Controller {
 
     private function requestStockData($stockCode, $start, $end)
     {
-        $response = array();
+        $url = 'http://q.stock.sohu.com/hisHq?code=';
+        $request = new Request($url . $stockCode . '&start=' . $start . '&end=' . $end);
+        $request->setContentType('application/json; charset=utf8');
+        $request->execute();
+        $response = $request->getResponse();
 
-        try {
-            $url = 'http://q.stock.sohu.com/hisHq?code=';
-            $request = new Request($url . $stockCode . '&start=' . $start . '&end=' . $end);
-            $request->setContentType('application/json; charset=utf8');
-            $request->execute();
-            $response = $request->getResponse();
-        } catch (Error $e) {
-            log_message('info','Request error!');
-        } catch (Exception $e) {
-            log_message('info','Request exception!');
+        log_message('info', var_export($response, true));
+
+        if (is_string($response)) {
+            $response = json_decode($response);
         }
 
-        if ($response->status != 0) {
-            return array();
+        //空对象
+        if (!count((array)$response)) {
+            return null;
         }
 
-        $res_data = $response['hq'];
+        //数组
+        if (is_array($response)) {
+            $response = $response[0];
+        }
+
+        if (isset($response->status) && ($response->status!= 0)) {
+            return null;
+        }
+
+        $res_data = $response->hq;
         $dataArr = array();
 
         for ($i = 0; $i < count($res_data); $i++) {
@@ -182,12 +192,12 @@ class Stock extends CI_Controller {
             $data['code'] = $stockCode;
             $data['kaipan'] = $s_data[1];
             $data['zuixin'] = $s_data[2];
-            $data['zhangfu'] = $s_data[4];
+            $data['zhangfu'] = str_replace('%', '', $s_data[4]);
             $data['chengjiaoliang'] = $s_data[7];
             $data['chengjiaoe'] = $s_data[8];
-            $data['huanshou'] = $s_data[9];
+            $data['huanshou'] = str_replace('%', '', $s_data[9]);
 
-            array_unshift($dataArr, $data);
+            array_push($dataArr, $data);
         }
 
         return $dataArr;

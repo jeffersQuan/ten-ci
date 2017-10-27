@@ -19,8 +19,10 @@ class Lists extends CI_Controller {
 
     public function init_stock()
     {
+        log_message('info','enter init data!');
         $index = 1;
         $max = 604500;
+//        $max = 2;
 
         $start = isset($_GET['start'])? $_GET['start'] : '';
         $end = isset($_GET['end'])? $_GET['end'] : '';
@@ -34,12 +36,14 @@ class Lists extends CI_Controller {
         $progress = $result->init_progress;
         if ($progress == 1) {
             $progress = 0;
-            $index = 0;
+            $index = 1;
         } else if ($progress > 0) {
             $index = $progress * $max - 3;
             if ($index < 0) {
-                $index = 0;
+                $index = 1;
             }
+        } else {
+            $index = 1;
         }
 
         include 'JJG/Request.php';
@@ -50,14 +54,23 @@ class Lists extends CI_Controller {
         log_message('info','start init data!');
 
         for (; $index < $max; $index++) {
-            $stockCode = $this->getStockCode($index);
-            $dataArr = $this->requestStockData($stockCode, $start, $end);
-            log_message('info','init: ' . var_export($dataArr, true));
+            $index = floor($index);
 
-            $this->stock_list_model->update_stock_list($dataArr);
-            log_message('info','init_stock: ' . $stockCode);
-            sleep(0.1);
-            $this->set_init_progress(($index + 1) / $max);
+            if (($index < 3000) || ($index >= 300000 && $index <= 301000) || ($index >= 600000)) {
+                $stockCode = $this->getStockCode($index);
+                log_message('info','init code: ' . $stockCode . ', start:' . $start . ' , end:' . $end);
+                $dataArr = $this->requestStockData($stockCode, $start, $end);
+
+                if (!$dataArr) {
+                    sleep(0.1);
+                    $this->set_init_progress(($index + 1) / $max);
+                    continue;
+                }
+
+                $this->stock_list_model->update_stock_list($dataArr);
+                sleep(0.1);
+                $this->set_init_progress(($index + 1) / $max);
+            }
         }
 
         $this->stock_list_model->set_gengxinliebiao(0);
@@ -77,7 +90,7 @@ class Lists extends CI_Controller {
             }
         }
 
-        return $code;
+        return 'cn_' . $code;
     }
 
 
@@ -91,11 +104,25 @@ class Lists extends CI_Controller {
 
         log_message('info', var_export($response, true));
 
-        if ($response->status != 0) {
-            return array();
+        if (is_string($response)) {
+            $response = json_decode($response);
         }
 
-        $res_data = $response['hq'];
+        //空对象
+        if (!count((array)$response)) {
+            return null;
+        }
+
+        //数组
+        if (is_array($response)) {
+            $response = $response[0];
+        }
+
+        if (isset($response->status) && ($response->status!= 0)) {
+            return null;
+        }
+
+        $res_data = $response->hq;
         $dataArr = array();
 
         for ($i = 0; $i < count($res_data); $i++) {
@@ -103,10 +130,10 @@ class Lists extends CI_Controller {
             $data['code'] = $stockCode;
             $data['kaipan'] = $s_data[1];
             $data['zuixin'] = $s_data[2];
-            $data['zhangfu'] = $s_data[4];
+            $data['zhangfu'] = str_replace('%', '', $s_data[4]);
             $data['chengjiaoliang'] = $s_data[7];
             $data['chengjiaoe'] = $s_data[8];
-            $data['huanshou'] = $s_data[9];
+            $data['huanshou'] = str_replace('%', '', $s_data[9]);
 
             array_unshift($dataArr, $data);
         }
