@@ -200,6 +200,30 @@ class Stock extends CI_Controller {
             $data['chengjiaoe'] = $s_data[8];
             $data['huanshou'] = str_replace('%', '', $s_data[9]);
 
+            if (!is_numeric($data['kaipan'])) {
+                $data['kaipan'] = 0;
+            }
+
+            if (!is_numeric($data['zuixin'])) {
+                $data['zuixin'] = 0;
+            }
+
+            if (!is_numeric($data['zhangfu'])) {
+                $data['zhangfu'] = 0;
+            }
+
+            if (!is_numeric($data['chengjiaoliang'])) {
+                $data['chengjiaoliang'] = 0;
+            }
+
+            if (!is_numeric($data['chengjiaoe'])) {
+                $data['chengjiaoe'] = 0;
+            }
+
+            if (!is_numeric($data['huanshou'])) {
+                $data['huanshou'] = 0;
+            }
+
             array_push($dataArr, $data);
         }
 
