@@ -25,7 +25,7 @@
     <?php foreach ($stock_list as $stock): ?>
         <tr>
             <td>
-                <?php echo substr($stock['code'], 2); ?>
+                <?php echo substr($stock['code'], 3); ?>
             </td>
             <td>
                 <?php echo $stock['zuixin']; ?>
