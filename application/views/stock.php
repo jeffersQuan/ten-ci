@@ -139,8 +139,8 @@
             cache: false,
             timeout: 10 * 60 * 1000,
             data: {
-                start: getParameterByName('start'),
-                end: getParameterByName('end')
+                start: getParameterByName('start') || getDateToday(),
+                end: getParameterByName('end') || getDateToday()
             },
             success: function (data) {
                 console.log(data);
@@ -152,6 +152,21 @@
                 $('#server_status').html('请求数据失败！');
             }
         });
+    }
+    function getDateToday () {
+        var today = new Date();
+        var todayStr = '';
+        var year,month,date;
+
+        year = today.getFullYear();
+        month = +today.getMonth() + 1;
+        date = today.getDate();
+
+        todayStr += year;
+        todayStr += month > 10 ? month : ('0' + month);
+        todayStr += date > 10 ? date : ('0' + date);
+
+        return todayStr;
     }
     setTimeout(function () {
         if (window.name) {
