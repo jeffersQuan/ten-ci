@@ -163,8 +163,8 @@
         date = today.getDate();
 
         todayStr += year;
-        todayStr += month > 10 ? month : ('0' + month);
-        todayStr += date > 10 ? date : ('0' + date);
+        todayStr += month > 9 ? month : ('0' + month);
+        todayStr += date > 9 ? date : ('0' + date);
 
         return todayStr;
     }
