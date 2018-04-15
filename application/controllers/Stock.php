@@ -44,7 +44,7 @@ class Stock extends CI_Controller {
         $result = $this->stock_list_model->get_status();
         if ($result->gengxinshuju == 0) {
             echo 'ok';
-            $this->backup_mysql();
+//            $this->backup_mysql();
         } else {
             echo $result->update_progress;
         }
@@ -126,7 +126,7 @@ class Stock extends CI_Controller {
             }
             $this->stock_list_model->set_gengxinshuju(0);
 	        $this->set_update_progress(0);
-	        $this->backup_mysql();
+//	        $this->backup_mysql();
             log_message('info','update_data success!');
         } catch (Error $e) {
             log_message('info','update_data error!' . var_export($e, true));
