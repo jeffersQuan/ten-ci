@@ -235,15 +235,12 @@ function check(data, params) {
                 allData.unshift(dayData);
             }
 
-            temp = {};
-            temp[symbol] = allData;
-
             if (isRecommend1(allData)) {
-                result1.push(temp);
+                result1.push(symbol);
             }
 
             if (isRecommend2(allData)) {
-                result2.push(temp);
+                result2.push(symbol);
             }
 
             if (!inList && codeList.indexOf(symbol) == -1) {
