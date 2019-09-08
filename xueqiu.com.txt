@@ -1,0 +1,283 @@
+var url = "https://stock.xueqiu.com/v5/stock/chart/kline.json";
+var params = {
+    symbol: "",
+    begin: '',
+    period: "day",
+    type: "before",
+    count: -30,
+    indicator: "kline,ma,macd,kdj,boll,rsi,wr,bias,cci,psy,pe,pb,ps,pcf,market_capital,agt,ggt,balance"
+};
+var start = getParamByName("start");
+var symbol;
+var column;
+var item;
+var result1;
+var result2;
+var codeList;
+var dayData, allData, temp;
+var begin;
+var inList = true;
+var codeStart = 1, codeEnd = 604000;
+// var codeStart = 1, codeEnd = 20;
+var currentCode;
+var nextSymbol;
+var startTime;
+
+function getParamByName (name, url) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results;
+
+    results = regex.exec(url || location.href);
+
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function ajax(options) {
+    options = options || {};
+    options.type = (options.type || "GET").toUpperCase();
+    options.dataType = options.dataType || "json";
+    var params = formatParams(options.data);
+    var xhr = new XMLHttpRequest();
+
+    //接收 - 第三步
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var status = xhr.status;
+            if (status >= 200 && status < 300) {
+                options.success && options.success(xhr.responseText, xhr.responseXML);
+            } else {
+                options.fail && options.fail(status);
+            }
+        }
+    }
+
+    xhr.open("GET", options.url + "?" + params, true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader("Accept", "application/json, text/plain, */*");
+    xhr.send(null);
+}
+
+function formatParams(data) {
+    var arr = [];
+    for (var name in data) {
+        arr.push(encodeURIComponent(name) + "=" + (data[name]));
+    }
+    arr.push(("v=" + Math.random()).replace(".",""));
+    return arr.join("&");
+}
+
+
+function getData(params) {
+    console.log(params.symbol);
+    ajax({
+        url: url,
+        data: params,
+        dataType: "json",
+        success: function(data){
+            if (typeof data == "string") {
+                data = JSON.parse(data);
+            }
+
+            check(data, params);
+        },
+        fail: function(err) {
+            alert(err);
+        }
+    });
+}
+
+function isRecommend1(data) {
+    var count = 0, condition1 = false, condition2 = false,
+        condition3 = true, condition4 = false;
+    var ma5, ma10, ma20, ma30;
+
+    for (var i = 0, li = data.length; i < li; i++) {
+        ma5 = data[i].ma5;
+        ma10 = data[i].ma10;
+        ma20 = data[i].ma20;
+        ma30 = data[i].ma30;
+
+        if ((ma30 <= ma5) && (ma30 <= ma10) && (ma30 <= ma20)) {
+            count++;
+
+            if (count >= 10) {
+                condition1 = true;
+                break;
+            }
+        } else {
+            if (count >= 10) {
+                condition1 = true;
+                break;
+            } else {
+                condition1 = false;
+                count = 0;
+            }
+        }
+
+        if ((data[i].turnoverrate > 6) || (data[i].percent > 9)) {
+            condition3 = false;
+        }
+    }
+
+    if ((data[0].close >= data[0].ma30)
+        && (data[1].close <= data[1].ma30)
+        && (data[0].ma5 >= data[1].ma5)) {
+        condition2 = true;
+    }
+
+    if ((data[0].close > 5)) {
+        condition4 = true;
+    }
+
+    return condition1 && condition2 && condition3 && condition4;
+}
+
+function isRecommend2(data) {
+    var count = 0, condition1 = false, condition2 = false,
+        condition3 = true, condition4 = false;
+    var ma5, ma10, ma20, ma30;
+
+    if (((data[0].ma5 - data[1].ma5) / data[1].ma5 >= -0.005)
+        && (data[0].ma30 >= data[1].ma30)
+        && (data[1].ma30 >= data[2].ma30)
+        && (data[2].ma30 >= data[3].ma30)
+        && (data[3].ma30 >= data[4].ma30)
+        && (data[0].ma20 >= data[1].ma20)
+        && (data[1].ma20 >= data[2].ma20)
+        && (data[2].ma20 >= data[3].ma20)
+        && (data[3].ma20 >= data[4].ma20)) {
+        condition1 = true;
+    }
+
+    if ((data[0].percent > -4) && (data[0].percent < 4)
+        && (data[1].percent > -4) && (data[1].percent < 4)
+        && (data[2].percent > -4) && (data[2].percent < 4)
+        && (data[3].percent > -4) && (data[3].percent < 4)) {
+        condition2 = true;
+    }
+
+    for (var i = 0, li = data.length; i < li; i++) {
+        if ((data[i].turnoverrate > 6) || (data[i].percent > 9)) {
+            condition3 = false;
+        }
+    }
+
+    if ((data[0].close > 5)) {
+        condition4 = true;
+    }
+
+    return condition1 && condition2 && condition3 && condition4;
+}
+
+function getNextCode() {
+    var nextCode = currentCode + 1
+    var code = '' + nextCode;
+    var currentCodeIndex;
+
+    if (inList) {
+        currentCodeIndex = codeList.indexOf(symbol);
+
+        if (currentCodeIndex < codeList.length - 2) {
+            return codeList[currentCodeIndex + 1];
+        }
+    } else {
+        if (nextCode >= codeStart && nextCode <= codeEnd) {
+            if (nextCode < 3000) {
+                while (code.length < 6) {
+                    code = "0" + code;
+                }
+                code = "SZ" + code;
+            } else if (nextCode >= 300000 && nextCode <= 301000) {
+                code = "SZ" + code;
+            } else if (nextCode >= 600000) {
+                code = "SH" + code;
+            } else if (nextCode <= codeEnd) {
+                if (nextCode == 3000) {
+                    currentCode = 300000 - 1;
+                } else if (nextCode == 301001) {
+                    currentCode = 600000 - 1;
+                }
+                return getNextCode();
+            }
+        } else {
+            code = "";
+        }
+    }
+
+    return code;
+}
+
+
+function check(data, params) {
+    symbol = params.symbol;
+    column = data.data.column || [];
+    item = data.data.item || [];
+    result1 = JSON.parse(localStorage.getItem("result1") || "[]");
+    result2 = JSON.parse(localStorage.getItem("result2") || "[]");
+    codeList = JSON.parse(localStorage.getItem("codeList") || "[]");
+    currentCode = +symbol.slice(2);
+
+    if (data.data && item && item.length) {
+        if (symbol == "SZ000001") {
+            result1 = [];
+            result2 = [];
+        }
+
+        if (data.error_code == 0) {
+            allData = [];
+
+            for (var i = 0, li = item.length; i < li; i++) {
+                dayData = {};
+
+                for (var j = 0, lj = column.length; j < lj; j++) {
+                    dayData[column[j]] = item[i][j];
+                }
+                allData.unshift(dayData);
+            }
+
+            temp = {};
+            temp[symbol] = allData;
+
+            if (isRecommend1(allData)) {
+                result1.push(temp);
+            }
+
+            if (isRecommend2(allData)) {
+                result2.push(temp);
+            }
+
+            if (!inList && codeList.indexOf(symbol) == -1) {
+                codeList.push(symbol);
+                localStorage.setItem("codeList", JSON.stringify(codeList));
+            }
+
+            localStorage.setItem("result1", JSON.stringify(result1));
+            localStorage.setItem("result2", JSON.stringify(result2));
+        } else if (data.error_code == 400016) {
+            alert("登陆状态已失效");
+            return;
+        } else {
+            alert("请求失败");
+            setTimeout(function(){
+                getData(params);
+            }, 1000 * 60);
+        }
+    }
+
+    if (nextSymbol = getNextCode()) {
+        params.symbol = nextSymbol;
+        getData(params);
+    } else {
+        console.log("result1:", result1);
+        console.log("result2:", result2);
+        console.log((Date.now() - startTime) / 1000);
+    }
+}
+
+if (start) {
+    params.symbol = "SZ000001";
+    params.begin = + new Date(start);
+    startTime = Date.now();
+    getData(params);
+}
+
