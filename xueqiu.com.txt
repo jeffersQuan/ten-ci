@@ -91,26 +91,30 @@ function isRecommend1(data) {
         condition3 = true, condition4 = false;
     var ma5, ma10, ma20, ma30;
 
+    if (begin - 12 * 3600 * 1000 > data[0].timestamp) {
+        return false;
+    }
+
     for (var i = 0, li = data.length; i < li; i++) {
         ma5 = data[i].ma5;
         ma10 = data[i].ma10;
         ma20 = data[i].ma20;
         ma30 = data[i].ma30;
 
-        if ((ma30 <= ma5) && (ma30 <= ma10) && (ma30 <= ma20)) {
-            count++;
+        if (!condition1) {
+            if ((ma30 <= ma5) && (ma30 <= ma10) && (ma30 <= ma20)) {
+                count++;
 
-            if (count >= 10) {
-                condition1 = true;
-                break;
-            }
-        } else {
-            if (count >= 10) {
-                condition1 = true;
-                break;
+                if (count >= 10) {
+                    condition1 = true;
+                }
             } else {
-                condition1 = false;
-                count = 0;
+                if (count >= 10) {
+                    condition1 = true;
+                } else {
+                    condition1 = false;
+                    count = 0;
+                }
             }
         }
 
@@ -136,6 +140,10 @@ function isRecommend2(data) {
     var count = 0, condition1 = false, condition2 = false,
         condition3 = true, condition4 = false;
     var ma5, ma10, ma20, ma30;
+
+    if (begin - 12 * 3600 * 1000 > data[0].timestamp) {
+        return false;
+    }
 
     if (((data[0].ma5 - data[1].ma5) / data[1].ma5 >= -0.005)
         && (data[0].ma30 >= data[1].ma30)
@@ -273,7 +281,7 @@ function check(data, params) {
 
 if (start) {
     params.symbol = "SZ000001";
-    params.begin = + new Date(start);
+    begin = params.begin = + new Date(start);
     startTime = Date.now();
     getData(params);
 }
