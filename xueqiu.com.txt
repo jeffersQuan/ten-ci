@@ -13,6 +13,7 @@ var column;
 var item;
 var result1;
 var result2;
+var result3;
 var codeList;
 var dayData, allData, temp;
 var begin;
@@ -91,7 +92,7 @@ function isRecommend1(data) {
         condition3 = true, condition4 = false;
     var ma5, ma10, ma20, ma30;
 
-    if (begin - 12 * 3600 * 1000 > data[0].timestamp) {
+    if (begin - 3 * 24 * 3600 * 1000 > data[0].timestamp) {
         return false;
     }
 
@@ -129,7 +130,8 @@ function isRecommend1(data) {
         condition2 = true;
     }
 
-    if ((data[0].close > 5)) {
+    if ((data[0].close > 5) && (data[0].percent < 5)
+        && ((data[0].dif > data[1].dif) || (data[0].dea > data[1].dea))) {
         condition4 = true;
     }
 
@@ -137,15 +139,35 @@ function isRecommend1(data) {
 }
 
 function isRecommend2(data) {
-    var count = 0, condition1 = false, condition2 = false,
+    var count = 0, condition1 = true, condition2 = false,
         condition3 = true, condition4 = false;
-    var ma5, ma10, ma20, ma30;
+    var ma5, ma10, ma20, ma30, cnmtaArr = [];
+    var fangcha0 = Math.abs(data[0].ma5 - data[0].ma10) / 2 / Math.sqrt(data[0].close);
+    var fangcha1 = Math.abs(data[1].ma5 - data[1].ma10) / 2 / Math.sqrt(data[1].close);
+    var fangcha2 = Math.abs(data[2].ma5 - data[2].ma10) / 2 / Math.sqrt(data[2].close);
+    var fangcha3 = Math.abs(data[3].ma5 - data[3].ma10) / 2 / Math.sqrt(data[3].close);
 
-    if (begin - 12 * 3600 * 1000 > data[0].timestamp) {
+    if (begin - 3 * 24 * 3600 * 1000 > data[0].timestamp) {
         return false;
     }
 
-    if (((data[0].ma5 - data[1].ma5) / data[1].ma5 >= -0.005)
+    if (data[1].hold_ratio_cn <= 0) {
+        return false;
+    }
+
+    for (var i = 1, li = 6; i < li; i++) {
+        var cnmta = (data[i].hold_ratio_cn + data[i+1].hold_ratio_cn
+            + data[i+2].hold_ratio_cn + data[i+3].hold_ratio_cn
+            + data[i+4].hold_ratio_cn) / 5;
+        cnmtaArr.push(cnmta);
+    }
+
+    for (var i = 0, li = cnmtaArr.length - 1; i < li; i++) {
+        condition1 = condition1 && (cnmtaArr[i] > cnmtaArr[i+1]);
+    }
+
+    if ((fangcha0 < fangcha1)
+        && (fangcha1 < fangcha2) && (fangcha2 < fangcha3)
         && (data[0].ma30 >= data[1].ma30)
         && (data[1].ma30 >= data[2].ma30)
         && (data[2].ma30 >= data[3].ma30)
@@ -154,13 +176,6 @@ function isRecommend2(data) {
         && (data[1].ma20 >= data[2].ma20)
         && (data[2].ma20 >= data[3].ma20)
         && (data[3].ma20 >= data[4].ma20)) {
-        condition1 = true;
-    }
-
-    if ((data[0].percent > -4) && (data[0].percent < 4)
-        && (data[1].percent > -4) && (data[1].percent < 4)
-        && (data[2].percent > -4) && (data[2].percent < 4)
-        && (data[3].percent > -4) && (data[3].percent < 4)) {
         condition2 = true;
     }
 
@@ -170,7 +185,44 @@ function isRecommend2(data) {
         }
     }
 
-    if ((data[0].close > 5)) {
+    if ((data[0].close > 5) 
+//         && (data[0].macd > data[3].macd || data[0].macd > 0)
+        && (data[0].percent > -3) && (data[0].percent < 3)
+        && (data[1].percent > -3) && (data[1].percent < 3)
+        && (data[2].percent > -3) && (data[2].percent < 3)
+        && (data[3].percent > -3) && (data[3].percent < 3)) {
+        condition4 = true;
+    }
+
+    return condition1 && condition2 && condition3 && condition4;
+}
+
+function isRecommend3(data) {
+    var count = 0, condition1 = true, condition2 = true,
+        condition3 = true, condition4 = false;
+    var ma5, ma10, ma20, ma30;
+    
+    if (begin - 3 * 24 * 3600 * 1000 > data[0].timestamp) {
+        return false;
+    }
+
+    for (var i = 0, li = 10; i < li; i++) {
+        condition1 = condition1 && (data[i].ma5 > data[i].ma20)
+            && (data[i].ma10 > data[i].ma20) && (data[i].ma20 > data[i].ma30)
+            && (data[i].ma30 > data[i + 1].ma30) && (data[i].ma20 > data[i + 1].ma20);
+    }
+
+    for (var i = 0, li = data.length; i < li; i++) {
+        if ((data[i].turnoverrate > 6) || (data[i].percent > 9)) {
+            condition3 = false;
+        }
+    }
+
+    if ((data[0].close > 5) && (data[0].close > data[0].ma5)
+        && (data[0].ma5 < data[0].ma10) && (data[0].macd > -0.15)
+        && (data[0].dif >= data[1].dif) && (data[0].macd >= data[1].macd)
+        && (data[1].ma5 < data[1].ma10) && (data[0].ma5 > data[1].ma5)
+        && ((data[0].ma20 - data[0].ma30) / (data[1].ma20 - data[1].ma30) > 0.95)) {
         condition4 = true;
     }
 
@@ -185,8 +237,10 @@ function getNextCode() {
     if (inList) {
         currentCodeIndex = codeList.indexOf(symbol);
 
-        if (currentCodeIndex < codeList.length - 2) {
+        if (currentCodeIndex < codeList.length - 1) {
             return codeList[currentCodeIndex + 1];
+        } else {
+            return "";
         }
     } else {
         if (nextCode >= codeStart && nextCode <= codeEnd) {
@@ -215,6 +269,14 @@ function getNextCode() {
     return code;
 }
 
+function showResult() {
+    console.log("result1:", result1);
+    console.log("result2:", result2);
+    console.log("result3:", result3);
+
+    var htmlStr = '<div id="modal-login" class="modal modal-login in" style="'
+        + 'width: 400px;height: 400px;background-color: red;display: block;"></div>';
+}
 
 function check(data, params) {
     symbol = params.symbol;
@@ -222,13 +284,15 @@ function check(data, params) {
     item = data.data.item || [];
     result1 = JSON.parse(localStorage.getItem("result1") || "[]");
     result2 = JSON.parse(localStorage.getItem("result2") || "[]");
+    result3 = JSON.parse(localStorage.getItem("result3") || "[]");
     codeList = JSON.parse(localStorage.getItem("codeList") || "[]");
     currentCode = +symbol.slice(2);
 
-    if (data.data && item && item.length) {
+    if (data.data && item && item.length == Math.abs(params.count)) {
         if (symbol == "SZ000001") {
             result1 = [];
             result2 = [];
+            result3 = [];
         }
 
         if (data.error_code == 0) {
@@ -251,6 +315,10 @@ function check(data, params) {
                 result2.push(symbol);
             }
 
+            if (isRecommend3(allData)) {
+                result3.push(symbol);
+            }
+
             if (!inList && codeList.indexOf(symbol) == -1) {
                 codeList.push(symbol);
                 localStorage.setItem("codeList", JSON.stringify(codeList));
@@ -258,6 +326,7 @@ function check(data, params) {
 
             localStorage.setItem("result1", JSON.stringify(result1));
             localStorage.setItem("result2", JSON.stringify(result2));
+            localStorage.setItem("result3", JSON.stringify(result3));
         } else if (data.error_code == 400016) {
             alert("登陆状态已失效");
             return;
@@ -273,8 +342,7 @@ function check(data, params) {
         params.symbol = nextSymbol;
         getData(params);
     } else {
-        console.log("result1:", result1);
-        console.log("result2:", result2);
+        showResult();
         console.log((Date.now() - startTime) / 1000);
     }
 }
